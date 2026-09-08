@@ -3,7 +3,13 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(255);
+
+// Sidelines
+  line(0, 0, 600, 0);
+  line(600, 0, 600, 400);
+  line(0, 400, 600, 400);
+  line(0, 0, 0, 400);
 
 // Horizontal lines
   line(0, 100, 600, 100);
@@ -22,23 +28,32 @@ function draw() {
   line(400, 0, 400, 400);
   line(500, 0, 500, 400);
 
-// Dikte
+// thickness of the lines
   strokeWeight(4);
   
-// Vierkanten met kleur
+// Squares with different colors
 // fill(locatie, postitie, hoogte, hoogte)
+  fill('yellow');
   rect(0, 0, 100, 50);
-    fill(255, 255, 0);
-
+    
+  fill('black');
   rect(100, 0, 50, 100);
-    fill(0, 0, 0);
-
+    
+  fill('red');
   rect(150, 50, 100, 25);
-    fill(0, 0, 255);
-
+    
+  fill('blue');
   rect(250, 50, 50, 50);
-    fill(255, 0, 0);
-
+    
+  fill('yellow');
   rect(300, 0, 100, 50);
-    fill(255, 255, 255);
+    
+  fill('blue');
+  rect(500, 0, 100, 100);
+  
+  fill('red');
+  rect(0, 100, 100, 100);
+
+  fill('yellow');
+  rect(150, 100, 100, 100);
 }
