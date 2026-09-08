@@ -26,17 +26,17 @@ function draw() {
   text(greeting, 20, y);
 
   y = y + 20;
-  text('Optellen:' + optellen, 20, y); 
+  text('Optellen: ' + optellen, 20, y); 
   
   y = y + 20;
-  text('Aftrekken:' + aftrekken, 20, y);
+  text('Aftrekken: ' + aftrekken, 20, y);
 
 
   y = y + 20;
-  text('Vermenigvuldigen:' + vermenigvuldigen, 20, y);
+  text('Vermenigvuldigen: ' + vermenigvuldigen, 20, y);
 
   y = y + 20;
-  text('Delen:' + delen, 20, y);
+  text('Delen: ' + delen, 20, y);
   
 
 /*
