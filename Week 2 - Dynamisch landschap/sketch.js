@@ -55,10 +55,16 @@ function draw() {
   sx2 = sx2 + 100;
   line(sx, 350, sx2, 350);
 
-  // Bergen
-  // Midden X-as, Midden Y-as, Rechts X-as, Rechts Y-as, Links X-as, Links Y-as 
+  // Sun
   stroke('black');
   strokeWeight(0);
+  fill(235, 150, 48, 100);
+  circle(450, 65, 110);
+  fill('#ffc900');
+  circle(450, 65, 75);
+
+  // Bergen
+  // Midden X-as, Midden Y-as, Rechts X-as, Rechts Y-as, Links X-as, Links Y-as 
   fill('#636e6c');
   triangle(mx, 125, rx, 285, lx, 285);
 
@@ -85,12 +91,6 @@ function draw() {
   rect(0, 290, 800, 10);
   fill('darkgreen');
   rect(0, 284, 800, 6);
-
-  // Sun
-  fill(235, 150, 48, 100);
-  circle(450, 65, 110);
-  fill('#ffc900');
-  circle(450, 65, 75);
 
   // Trees
   fill('#87622e');
