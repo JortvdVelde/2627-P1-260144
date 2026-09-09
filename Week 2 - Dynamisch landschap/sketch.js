@@ -72,7 +72,7 @@ function draw() {
   rx = rx + 225;
   lx = lx + 250;
   fill('#818786');
-  triangle(mx, 165, rx, 285, lx, 285);
+  triangle(mx, 145, rx, 285, lx, 285);
 
   mx = mx + 175;
   rx = rx + 175;
