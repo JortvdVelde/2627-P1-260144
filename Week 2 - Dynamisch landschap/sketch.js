@@ -4,15 +4,18 @@ function setup() {
 
 function draw() {
   background('#9bcef5');
-
   // Variablen Strepen
-  let sx = 0; // Startpunt streep (X-as)
-  let sx2 = 50; // Streep lengte (Einde X-as)
+  let LineStartXas = 0; // Startpunt streep (X-as)
+  let LineEndXas = 50; // Streep lengte (Einde X-as)
 
   // Variablen bergen
   let mx = 100; // Bovenzijde X-as
   let rx = 250; // Rechterkant X-as
   let lx = -50; // Linkerkant X-as
+
+  // Variablen zon
+  let sun = 450
+  let sunspeed = 2
 
   // Road
   fill('grey');
@@ -21,47 +24,47 @@ function draw() {
   // Roadmarking
   strokeWeight(8);
   stroke('lightgrey');
-  line(sx, 350, sx2, 350);
+  line(LineStartXas, 350, LineEndXas, 350);
 
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
   
-  sx = sx + 100; 
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
-  
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
-  
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
-  
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
-  
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
-  
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
-  
-  sx = sx + 100;
-  sx2 = sx2 + 100;
-  line(sx, 350, sx2, 350);
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
+
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
+
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
+
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
+
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
+
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
+
+  LineStartXas = LineStartXas + 100;
+  LineEndXas = LineEndXas + 100;
+  line(LineStartXas, 350, LineEndXas, 350);
 
   // Sun
   stroke('black');
   strokeWeight(0);
   fill(235, 150, 48, 100);
-  circle(450, 65, 110);
+  circle(sun, 65, 110);
   fill('#ffc900');
-  circle(450, 65, 75);
+  circle(sun, 65, 75);
 
   // Bergen
   // Midden X-as, Midden Y-as, Rechts X-as, Rechts Y-as, Links X-as, Links Y-as 
@@ -191,7 +194,6 @@ function draw() {
   fill('lightblue');
   rect(270, 250, 110, 75, 10);
   rect(380, 290, 20, 30);
-  triangle(380, 300, 370, 270, 400, 290);
   fill('black');
   circle(290, 325, 30);
   circle(370, 325, 30);

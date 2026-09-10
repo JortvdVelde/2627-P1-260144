@@ -4,7 +4,13 @@ function setup() {
 
 function draw() {
   background(220);
-  strokeWeight(0)
+
+// Variablen kleur stoplicht
+  let trafficred = 'red';
+  let trafficorange = 'orange';
+  let trafficgreen = '#45bd18';
+  
+  strokeWeight(0);
 // 1. Name
   fill('black')
   textSize(20);
@@ -73,11 +79,11 @@ function draw() {
   fill('grey');
   rect(90, 530, 70, 160);
   rect(110, 690, 30, 60);
-  fill(255, 0, 0); // Red
+  fill(trafficred); // Red
   circle(125, 560, 45, 45);
-  fill(255, 120, 0); // Orange
+  fill(trafficorange); // Orange
   circle(125, 610, 45, 45);
-  fill(69, 247, 14); // Green
+  fill(trafficgreen); // Green
   circle(125, 660, 45, 45);
 
 // 6. Dobbelsteen
