@@ -15,8 +15,8 @@
   let car1b = 380;
   let carspeed = 2;
 
-  let car2v;
-  let car2b;
+  let car2v = 100
+  let car2b = 210
   let carspeed2 = 3
 
 function setup() {
@@ -260,8 +260,8 @@ function draw() {
     car1v = -150
     car1b = -40
   }
-  /*
-  fill('lightblue');
+  
+  fill('blue');
   rect(car2v, 250, 110, 75, 10);
   rect(car2b, 290, 20, 30);
   fill('black');
@@ -274,5 +274,5 @@ function draw() {
     car2v = -150
     car2b = -40
   }
-*/
+
 }
