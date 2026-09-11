@@ -1,3 +1,24 @@
+// Variablen zon
+  let sun = 200;
+  let sunspeed = 1;
+
+// Variablen Clouds
+  let cloudslinks = 60;
+  let cloudsmidden = 300;
+  let cloudsrechts = 600;
+  let cloudssnel = 500;
+  let cloudsspeed = -1;
+  let cloudsspeedsnel = -1.5;
+
+// Variablen car
+  let car1v = 270;
+  let car1b = 380;
+  let carspeed = 2;
+
+  let car2v;
+  let car2b;
+  let carspeed2 = 3
+
 function setup() {
   createCanvas(800, 400);
 }
@@ -13,10 +34,7 @@ function draw() {
   let rx = 250; // Rechterkant X-as
   let lx = -50; // Linkerkant X-as
 
-  // Variablen zon
-  let sun = 450
-  let sunspeed = 2
-
+  
   // Road
   fill('grey');
   rect(0, 300, 800, 100);
@@ -65,6 +83,11 @@ function draw() {
   circle(sun, 65, 110);
   fill('#ffc900');
   circle(sun, 65, 75);
+  
+  sun = sun + sunspeed;
+  if(sun >= 855) {
+    sun = -55;
+  }
 
   // Bergen
   // Midden X-as, Midden Y-as, Rechts X-as, Rechts Y-as, Links X-as, Links Y-as 
@@ -151,33 +174,66 @@ function draw() {
   circle(725, 204, 60);
   circle(680, 204, 60);
 
-  // Clouds
+// Clouds
+  // Cloudslinks
   fill('#cfc4b4'); // Shadow
-  circle(50, 45, 50);
-  circle(80, 40, 60);
-  circle(110, 45, 50);
+  circle(cloudslinks, 45, 50);
+  circle(cloudslinks + 30, 40, 60);
+  circle(cloudslinks + 60, 45, 50);
   fill('white'); // Normal
-  circle(50, 50, 50);
-  circle(80, 45, 60);
-  circle(110, 50, 50);
-  
-  fill('#cfc4b4'); // Shadow
-  circle(200, 55, 50);
-  circle(230, 50, 60);
-  circle(260, 55, 50);
-  fill('white'); // Normal
-  circle(200, 60, 50);
-  circle(230, 55, 60);
-  circle(260, 60, 50);
+  circle(cloudslinks, 50, 50);
+  circle(cloudslinks + 30, 45, 60);
+  circle(cloudslinks + 60, 50, 50);
 
+  cloudslinks = cloudslinks + cloudsspeed;
+  if(cloudslinks <= -100) {
+    cloudslinks = 900;
+  }
+
+  // Cloudsmidden
   fill('#cfc4b4'); // Shadow
-  circle(600, 40, 50);
-  circle(630, 35, 60);
-  circle(660, 40, 50);
+  circle(cloudsmidden, 55, 50);
+  circle(cloudsmidden + 30, 50, 60);
+  circle(cloudsmidden + 60, 55, 50);
   fill('white'); // Normal
-  circle(600, 45, 50);
-  circle(630, 40, 60);
-  circle(660, 45, 50);
+  circle(cloudsmidden, 60, 50);
+  circle(cloudsmidden + 30, 55, 60);
+  circle(cloudsmidden + 60, 60, 50);
+
+  cloudsmidden = cloudsmidden + cloudsspeed;
+  if(cloudsmidden <= -100) {
+    cloudsmidden = 900;
+  }
+
+  // Cloudsrechts
+  fill('#cfc4b4'); // Shadow
+  circle(cloudsrechts, 40, 50);
+  circle(cloudsrechts + 30, 35, 60);
+  circle(cloudsrechts + 60, 40, 50);
+  fill('white'); // Normal
+  circle(cloudsrechts, 45, 50);
+  circle(cloudsrechts + 30, 40, 60);
+  circle(cloudsrechts + 60, 45, 50);
+
+  cloudsrechts = cloudsrechts + cloudsspeed;
+  if(cloudsrechts <= -100) {
+    cloudsrechts = 900;
+  }
+
+  // Clouds snel
+  fill('#cfc4b4'); // Shadow
+  circle(cloudssnel, 40, 50);
+  circle(cloudssnel + 30, 35, 60);
+  circle(cloudssnel + 60, 40, 50);
+  fill('white'); // Normal
+  circle(cloudssnel, 45, 50);
+  circle(cloudssnel + 30, 40, 60);
+  circle(cloudssnel + 60, 45, 50);
+
+  cloudssnel = cloudssnel + cloudsspeedsnel;
+  if(cloudssnel <= -100) {
+    cloudssnel = 900;
+  }
 
   // Traffic light
   fill('#575552');
@@ -192,10 +248,31 @@ function draw() {
 
   // Car
   fill('lightblue');
-  rect(270, 250, 110, 75, 10);
-  rect(380, 290, 20, 30);
+  rect(car1v, 250, 110, 75, 10);
+  rect(car1b, 290, 20, 30);
   fill('black');
-  circle(290, 325, 30);
-  circle(370, 325, 30);
+  circle(car1v + 20, 325, 30);
+  circle(car1b - 10, 325, 30);
 
+  car1v = car1v + carspeed;
+  car1b = car1b + carspeed;
+  if(car1v >= 900) {
+    car1v = -150
+    car1b = -40
+  }
+  /*
+  fill('lightblue');
+  rect(car2v, 250, 110, 75, 10);
+  rect(car2b, 290, 20, 30);
+  fill('black');
+  circle(car2v + 20, 325, 30);
+  circle(car2b - 10, 325, 30);
+
+  car2v = car2v + carspeed2;
+  car2b = car2b + carspeed2;
+  if(car2v >= 900) {
+    car2v = -150
+    car2b = -40
+  }
+*/
 }
