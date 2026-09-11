@@ -10,17 +10,28 @@
   let cloudsspeed = -1;
   let cloudsspeedsnel = -1.5;
 
+// Variablen Traffic Light
+  let TrafficRed = 'black';
+  let TrafficOrange = 'black';
+  let TrafficGreen = 'green';
+
 // Variablen car
-  let car1v = 270;
-  let car1b = 380;
+  let car1v = 170;
+  let car1b = 280;
   let carspeed = 2;
 
-  let car2v = 100
-  let car2b = 210
-  let carspeed2 = 3
+  let car2v = 100;
+  let car2b = 210;
+  let carspeed2 = 3;
+
+  let car3v = 500;
+  let car3b = 610;
+
+  let car4v = 670
+  let car4b = 780
 
 function setup() {
-  createCanvas(800, 400);
+  createCanvas(800, 400);  
 }
 
 function draw() {
@@ -234,33 +245,19 @@ function draw() {
   if(cloudssnel <= -100) {
     cloudssnel = 900;
   }
-
+  
   // Traffic light
   fill('#575552');
   rect(600, 200, 32, 70);
   rect(611, 270, 10, 30);
-  fill('red');
+  fill(TrafficRed); // Red
   circle(616, 213, 16);
-  fill('orange');
+  fill(TrafficOrange); // Orange
   circle(616, 235, 16);
-  fill('green');
+  fill(TrafficGreen); // Green
   circle(616, 256, 16);
 
   // Car
-  fill('lightblue');
-  rect(car1v, 250, 110, 75, 10);
-  rect(car1b, 290, 20, 30);
-  fill('black');
-  circle(car1v + 20, 325, 30);
-  circle(car1b - 10, 325, 30);
-
-  car1v = car1v + carspeed;
-  car1b = car1b + carspeed;
-  if(car1v >= 900) {
-    car1v = -150
-    car1b = -40
-  }
-  
   fill('blue');
   rect(car2v, 250, 110, 75, 10);
   rect(car2b, 290, 20, 30);
@@ -274,5 +271,50 @@ function draw() {
     car2v = -150
     car2b = -40
   }
+  
 
+  fill('red');
+  rect(car3v, 250, 110, 75, 10);
+  rect(car3b, 290, 20, 30);
+  fill('black');
+  circle(car3v + 20, 325, 30);
+  circle(car3b - 10, 325, 30);
+
+  car3v = car3v + carspeed2;
+  car3b = car3b + carspeed2;
+  if(car3v >= 900) {
+    car3v = -150
+    car3b = -40
+  }
+
+
+  fill('lightblue');
+  rect(car1v, 300, 110, 75, 10);
+  rect(car1b, 340, 20, 30);
+  fill('black');
+  circle(car1v + 20, 375, 30);
+  circle(car1b - 10, 375, 30);
+
+  car1v = car1v + carspeed;
+  car1b = car1b + carspeed;
+  if(car1v >= 900) {
+    car1v = -150
+    car1b = -40
+  }
+  
+
+  fill('lightgreen');
+  rect(car4v, 300, 110, 75, 10);
+  rect(car4b, 340, 20, 30);
+  fill('black');
+  circle(car4v + 20, 375, 30);
+  circle(car4b - 10, 375, 30);
+
+  car4v = car4v + carspeed;
+  car4b = car4b + carspeed;
+  if(car4v >= 900) {
+    car4v = -150
+    car4b = -40
+  }
+  
 }
