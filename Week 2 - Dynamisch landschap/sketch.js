@@ -1,14 +1,24 @@
 // Variablen zon
-  let sun = 200;
-  let sunspeed = 1;
+  let sun = 200; // X-positie
+  let sunspeed = 0.5; // Snelheid van verplaatsing
+  let suny = 65; // Y-positie
+  let suna = 110; // Grootte zon achterkant
+  let sunv = 75; // Grootte zon voorkant
+  let day = true; // Schakeling of het dag of nacht is
+  let SunColor; // Zonkleur
+
+  //let SunStX = mouseX - sun * mouseX - sun;
+  //let SunStY = mouseY - suny * mouseY - suny;
 
 // Variablen Clouds
   let cloudslinks = 60;
   let cloudsmidden = 300;
   let cloudsrechts = 600;
   let cloudssnel = 500;
-  let cloudsspeed = -1;
-  let cloudsspeedsnel = -1.5;
+  let cloudsspeed = -0.5;
+  let cloudsspeedsnel = -1;
+  let CloudsColor;
+  let CloudsColorSh;
 
 // Variablen Traffic Light
   let TrafficRed = 'black';
@@ -16,37 +26,68 @@
   let TrafficGreen = 'green';
   let TrafficTimer = 0;
   let TrafficSpeed = 0.5;
-
   let TrafficRound = false;
 
 // Variablen car
   let car1v = 170;
   let car1b = 280;
-  let carspeed0 = 1.9;
   let carspeed1 = 2.2;
+  let car1ty = 300; // Auto 1 y-as blok toeter
+  let car1tw = 110; // Auto 1 Width blok toeter
+  let car1th = 75; // Auto 1 hoogte blok toeter
 
   let car2v = 100;
   let car2b = 210;
   let carspeed2 = 2.8;
-  let carspeed3 = 3.2;
+  let car2ty = 250; // Auto 2 y-as blok toeter
+  let car2tw = 110; // Auto 2 Width blok toeter
+  let car2th = 75; // Auto 2 hoogte blok toeter
 
   let car3v = 500;
   let car3b = 610;
+  let carspeed3 = 3.2;
+  let car3ty = 250; // Auto 3 y-as blok toeter
+  let car3tw = 110; // Auto 3 Width blok toeter
+  let car3th = 75; // Auto 3 hoogte blok toeter
 
   let car4v = 670;
   let car4b = 780;
+  let carspeed0 = 1.9;
+  let car4ty = 300; // Auto 4 y-as blok toeter
+  let car4tw = 110; // Auto 4 Width blok toeter
+  let car4th = 75; // Auto 4 hoogte blok toeter
+
+// Sounds toeter
+  let toeter_druif;
+  let Auw_trap;
+  let RickRoll;
+  let Watermeloen;
 
 // Variablen boom
   let boomx = 62; // X-as bladeren
   let boomy = 184; // Y-as bladeren
   let boomys = 189; // Y-as bladeren schaduw
+  let boomspeed = 0.2; // Snelheid dat bladeren heen en weer gaan
+  let boomronde = false;
+  let boomTijd = 0;
+
+// Lanterns
+  let LanternsX = 30;
+  let LanternsY = 175
+
+function preload() {
+  toeter_druif = loadSound('doei_druif.mp3');
+  Auw_trap = loadSound('Auw_trap.mp3');
+  RickRoll = loadSound('rick-roll-by-Tuna.mp3');
+  Watermeloen = loadSound('Hallo, wat kost hier watermeloen_.mp3');
+}
 
 function setup() {
   createCanvas(800, 400);  
 }
 
 function draw() {
-  background('#9bcef5');
+  
 // Variablen Strepen
   let LineStartXas = 0; // Startpunt streep (X-as)
   let LineEndXas = 50; // Streep lengte (Einde X-as)
@@ -56,8 +97,42 @@ function draw() {
   let rx = 250; // Rechterkant X-as
   let lx = -50; // Linkerkant X-as
 
+  // Sun / Day-Night cyclus
+  if (sun >= 855 && day == true) {
+    day = false
+    console.log('Het is nacht!');
+  }
+  else if(sun >= 855 && day == false) {
+    day = true
+    console.log('Het is dag!');
+  }
 
+  if(day == true) {
+    suna = 110;
+    SunColor = '#ffc900';
+    background('#9bcef5');
+    CloudsColor = 'white';
+    CloudsColorSh = '#cfc4b4';
+  }  
+  else {
+    suna = 0;
+    SunColor = '#e3e2c7';
+    background('#383833');
+    CloudsColor = '#69685b';
+    CloudsColorSh = '#5e5e51';
+
+    
+  }
   
+  fill(235, 150, 48, 100);
+  circle(sun, suny, suna);
+  fill(SunColor);
+  circle(sun, suny, sunv);
+  
+  sun = sun + sunspeed;
+  if(sun >= 855) {
+    sun = -55;
+  }
 // Road
   fill('grey');
   rect(0, 300, 800, 100);
@@ -99,18 +174,8 @@ function draw() {
   LineEndXas = LineEndXas + 100;
   line(LineStartXas, 350, LineEndXas, 350);
 
-// Sun
   stroke('black');
   strokeWeight(0);
-  fill(235, 150, 48, 100);
-  circle(sun, 65, 110);
-  fill('#ffc900');
-  circle(sun, 65, 75);
-  
-  sun = sun + sunspeed;
-  if(sun >= 855) {
-    sun = -55;
-  }
 
 // Bergen
   // Midden X-as, Midden Y-as, Rechts X-as, Rechts Y-as, Links X-as, Links Y-as 
@@ -142,68 +207,77 @@ function draw() {
   rect(0, 284, 800, 6);
 
 // Trees
+boomTijd += 1
+if (boomTijd >= 30){
+  boomspeed = boomspeed * -1
+}
+
+boomTijd = boomTijd % 30
+// console.log(boomspeed);
+
   fill('#87622e');
   rect(53, 194, 20, 90);
   fill('#2b632e'); // Shadow
-  circle(62, 189, 60);
-  circle(85, 209, 60);
-  circle(40, 209, 60);
+  boomx = boomx + boomspeed
+  circle(boomx, 189, 60);
+  circle(boomx + 23, 209, 60);
+  circle(boomx - 22, 209, 60);
   fill('green') // Normal
-  circle(62, 184, 60);
-  circle(85, 204, 60);
-  circle(40, 204, 60);
+  circle(boomx, 184, 60);
+  circle(boomx + 23, 204, 60);
+  circle(boomx - 22, 204, 60);
 
   fill('#87622e');
   rect(193, 194, 20, 90);
   fill('#2b632e'); // Shadow
-  circle(202, 189, 60);
-  circle(225, 209, 60);
-  circle(180, 209, 60);
+  circle(boomx + 140, 189, 60);
+  circle(boomx + 163, 209, 60);
+  circle(boomx + 118, 209, 60);
   fill('green') // Normal
-  circle(202, 184, 60);
-  circle(225, 204, 60);
-  circle(180, 204, 60);
+  circle(boomx + 140, 184, 60);
+  circle(boomx + 163, 204, 60);
+  circle(boomx + 118, 204, 60);
 
   fill('#87622e');
   rect(443, 194, 20, 90);
   fill('#2b632e'); // Shadow
-  circle(452, 189, 60);
-  circle(475, 209, 60);
-  circle(430, 209, 60);
+  circle(boomx + 390, 189, 60);
+  circle(boomx + 412, 209, 60);
+  circle(boomx + 368, 209, 60);
   fill('green') // Normal
-  circle(452, 184, 60);
-  circle(475, 204, 60);
-  circle(430, 204, 60);
+  circle(boomx + 390, 184, 60);
+  circle(boomx + 412, 204, 60);
+  circle(boomx + 368, 204, 60);
 
   fill('#87622e');
   rect(543, 194, 20, 90);
   fill('#2b632e'); // Shadow
-  circle(552, 189, 60);
-  circle(575, 209, 60);
-  circle(530, 209, 60);
+  circle(boomx + 490, 189, 60);
+  circle(boomx + 513, 209, 60);
+  circle(boomx + 468, 209, 60);
   fill('green') // Normal
-  circle(552, 184, 60);
-  circle(575, 204, 60);
-  circle(530, 204, 60);
+  circle(boomx + 490, 184, 60);
+  circle(boomx + 513, 204, 60);
+  circle(boomx + 468, 204, 60);
 
   fill('#87622e');
   rect(693, 194, 20, 90);
   fill('#2b632e'); // Shadow
-  circle(702, 189, 60);
-  circle(725, 209, 60);
-  circle(680, 209, 60);
+  circle(boomx + 640, 189, 60);
+  circle(boomx + 663, 209, 60);
+  circle(boomx + 618, 209, 60);
   fill('green') // Normal
-  circle(702, 184, 60);
-  circle(725, 204, 60);
-  circle(680, 204, 60);
+  circle(boomx + 640, 184, 60);
+  circle(boomx + 663, 204, 60);
+  circle(boomx + 618, 204, 60);
 
 // Clouds
   // Cloudslinks
-  fill('#cfc4b4'); // Shadow
+  fill(CloudsColorSh); // Shadow
   circle(cloudslinks, 45, 50);
   circle(cloudslinks + 30, 40, 60);
   circle(cloudslinks + 60, 45, 50);
-  fill('white'); // Normal
+  fill(CloudsColor); // Normal
   circle(cloudslinks, 50, 50);
   circle(cloudslinks + 30, 45, 60);
   circle(cloudslinks + 60, 50, 50);
@@ -214,11 +288,11 @@ function draw() {
   }
 
   // Cloudsmidden
-  fill('#cfc4b4'); // Shadow
+  fill(CloudsColorSh); // Shadow
   circle(cloudsmidden, 55, 50);
   circle(cloudsmidden + 30, 50, 60);
   circle(cloudsmidden + 60, 55, 50);
-  fill('white'); // Normal
+  fill(CloudsColor); // Normal
   circle(cloudsmidden, 60, 50);
   circle(cloudsmidden + 30, 55, 60);
   circle(cloudsmidden + 60, 60, 50);
@@ -229,11 +303,11 @@ function draw() {
   }
 
   // Cloudsrechts
-  fill('#cfc4b4'); // Shadow
+  fill(CloudsColorSh); // Shadow
   circle(cloudsrechts, 40, 50);
   circle(cloudsrechts + 30, 35, 60);
   circle(cloudsrechts + 60, 40, 50);
-  fill('white'); // Normal
+  fill(CloudsColor); // Normal
   circle(cloudsrechts, 45, 50);
   circle(cloudsrechts + 30, 40, 60);
   circle(cloudsrechts + 60, 45, 50);
@@ -244,11 +318,11 @@ function draw() {
   }
 
 // Clouds snel
-  fill('#cfc4b4'); // Shadow
+  fill(CloudsColorSh); // Shadow
   circle(cloudssnel, 40, 50);
   circle(cloudssnel + 30, 35, 60);
   circle(cloudssnel + 60, 40, 50);
-  fill('white'); // Normal
+  fill(CloudsColor); // Normal
   circle(cloudssnel, 45, 50);
   circle(cloudssnel + 30, 40, 60);
   circle(cloudssnel + 60, 45, 50);
@@ -273,13 +347,12 @@ function draw() {
   if (keyCode === 32 && TrafficRound == false){
     
     TrafficTimer = TrafficTimer + TrafficSpeed;
-	  if (TrafficTimer >= 25) {
+	  if (TrafficTimer >= 5) {
       TrafficGreen = 'black';
       TrafficOrange = 'orange'
-      
     }
 
-    if (TrafficTimer >= 300) {
+    if (TrafficTimer >= 275) {
       TrafficOrange = 'black';
       TrafficRed = 'Red';
     }
@@ -293,7 +366,7 @@ function draw() {
       carspeed3 = 3.2;
     }
 
-    if (TrafficTimer >= 700) {
+    if (TrafficTimer >= 600) {
       TrafficTimer = 0;
       TrafficRound = true;
     }
@@ -337,6 +410,10 @@ function draw() {
     }
   }
 
+// Lanterns
+  fill('#575552')
+  rect(LanternsX, LanternsY, 15, 125)
+
 // Blauwe auto
   fill('blue');
   rect(car2v, 250, 110, 75, 10);
@@ -344,12 +421,13 @@ function draw() {
   fill('black');
   circle(car2v + 20, 325, 30);
   circle(car2b - 10, 325, 30);
-
+  circle(car2b + 20, 295, 10);
+  
   if(car2v >= 900) {
     car2v = -150
     car2b = -40
   }
-  
+
 // Rode auto
   fill('red');
   rect(car3v, 250, 110, 75, 10);
@@ -357,6 +435,7 @@ function draw() {
   fill('black');
   circle(car3v + 20, 325, 30);
   circle(car3b - 10, 325, 30);
+  circle(car3b + 20, 295, 10);
 
   if(car3v >= 900) {
     car3v = -150
@@ -370,6 +449,7 @@ function draw() {
   fill('black');
   circle(car1v + 20, 375, 30);
   circle(car1b - 10, 375, 30);
+  circle(car1b + 20, 345, 10);
 
   if(car1v >= 900) {
     car1v = -150
@@ -383,12 +463,20 @@ function draw() {
   fill('black');
   circle(car4v + 20, 375, 30);
   circle(car4b - 10, 375, 30);
+  circle(car4b + 20, 345, 10);
 
   if(car4v >= 900) {
     car4v = -150
     car4b = -40
   }
-  
+
+  if (day == false) {
+  fill('#dbd823');
+  circle(car1b + 20, 345, 10); // Koplampen licht blauwe auto
+  circle(car2b + 20, 295, 10); // Koplampen blauwe auto
+  circle(car3b + 20, 295, 10); // Koplampen rode auto
+  circle(car4b + 20, 345, 10); // Koplampen licht groene auto
+  }
 }
 
 function keyPressed(){
@@ -396,5 +484,65 @@ function keyPressed(){
 
   if (keyCode === 32) {
     TrafficRound = false;
+  }
+}
+
+// Toeter als je op de muis klikt
+function mousePressed(){
+  if (mouseX > car1v && mouseX < car1v + car1tw && 
+    mouseY > car1ty && mouseX < car1ty + car1th) {
+    if (Auw_trap.isPlaying()) {
+      Auw_trap.stop();
+    }
+    else {
+      Auw_trap.play();
+      console.log('Toeter van Timo!');
+    }
+  }
+
+  if (mouseX > car2v && mouseX < car2v + car2tw &&
+    mouseY > car2ty && mouseY < car2ty + car2th) {
+    if (toeter_druif.isPlaying()) {
+      toeter_druif.stop();
+    }
+    else {
+      toeter_druif.play();
+      console.log('Toeter van druif.');
+    }
+  }
+
+  if (mouseX > car3v && mouseX < car3v + car3tw &&
+    mouseY > car3ty && mouseX < car3ty + car3th) {
+    if (RickRoll.isPlaying()) {
+        RickRoll.stop();
+        console.log('Toeter van Rick.');
+    }
+    else {
+        RickRoll.play();
+        console.log('Toeter van Rick.');
+    }
+  }
+
+  if (mouseX > car4v && mouseX < car4v + car4tw &&
+    mouseY > car4ty && mouseX < car4ty + car4th) {
+    if (Watermeloen.isPlaying()) {
+        Watermeloen.stop();
+    }
+    else {
+        Watermeloen.play();
+        console.log('Bel van winkelier.');
+    }
+  }
+}
+
+function keyPressed() {
+  // Bij het drukken op D wordt dag nacht of andersom.
+  if (keyCode === 68) {
+    if (day == false) {
+      day = true
+    }
+    else {
+      day = false
+    }
   }
 }
