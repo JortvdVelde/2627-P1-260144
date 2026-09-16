@@ -511,6 +511,16 @@ function keyPressed(){
   if (keyCode === 32) {
     TrafficRound = false;
   }
+  
+  // Bij het drukken op D wordt dag nacht of andersom.
+  if (keyCode === 68) {
+    if (day == false) {
+      day = true
+    }
+    else {
+      day = false
+    }
+  }
 }
 
 // Toeter als je op de muis klikt
@@ -556,18 +566,6 @@ function mousePressed(){
     else {
         Watermeloen.play();
         console.log('Fietsbel van klant.');
-    }
-  }
-}
-
-function keyPressed() {
-  // Bij het drukken op D wordt dag nacht of andersom.
-  if (keyCode === 68) {
-    if (day == false) {
-      day = true
-    }
-    else {
-      day = false
     }
   }
 }
