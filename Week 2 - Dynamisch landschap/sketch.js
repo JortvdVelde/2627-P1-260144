@@ -7,9 +7,6 @@
   let day = true; // Schakeling of het dag of nacht is
   let SunColor; // Zonkleur
 
-  //let SunStX = mouseX - sun * mouseX - sun;
-  //let SunStY = mouseY - suny * mouseY - suny;
-
 // Variablen Clouds
   let cloudslinks = 60;
   let cloudsmidden = 300;
@@ -52,10 +49,12 @@
 
   let car4v = 670;
   let car4b = 780;
-  let carspeed0 = 1.9;
+  let carspeed0 = 2;
   let car4ty = 300; // Auto 4 y-as blok toeter
   let car4tw = 110; // Auto 4 Width blok toeter
   let car4th = 75; // Auto 4 hoogte blok toeter
+
+  let HeadlightsColor = 'black'
 
 // Sounds toeter
   let toeter_druif;
@@ -73,7 +72,8 @@
 
 // Lanterns
   let LanternsX = 30;
-  let LanternsY = 175
+  let LanternsY = 175;
+  let LanternsColor = 'black';
 
 function preload() {
   toeter_druif = loadSound('doei_druif.mp3');
@@ -98,21 +98,14 @@ function draw() {
   let lx = -50; // Linkerkant X-as
 
   // Sun / Day-Night cyclus
-  if (sun >= 855 && day == true) {
-    day = false
-    console.log('Het is nacht!');
-  }
-  else if(sun >= 855 && day == false) {
-    day = true
-    console.log('Het is dag!');
-  }
-
   if(day == true) {
     suna = 110;
     SunColor = '#ffc900';
     background('#9bcef5');
     CloudsColor = 'white';
     CloudsColorSh = '#cfc4b4';
+    LanternsColor = 'black';
+    HeadlightsColor = 'black';
   }  
   else {
     suna = 0;
@@ -120,8 +113,8 @@ function draw() {
     background('#383833');
     CloudsColor = '#69685b';
     CloudsColorSh = '#5e5e51';
-
-    
+    LanternsColor = '#dbd823';
+    HeadlightsColor = '#dbd823';
   }
   
   fill(235, 150, 48, 100);
@@ -132,6 +125,16 @@ function draw() {
   sun = sun + sunspeed;
   if(sun >= 855) {
     sun = -55;
+  }
+
+  if (sun == 854 && day == true) {
+    day = false;
+    console.log('Het is nacht!');
+  }
+
+  else if (sun == 854 && day == false) {
+    day = true
+    console.log('Het is dag!');
   }
 // Road
   fill('grey');
@@ -413,6 +416,33 @@ boomTijd = boomTijd % 30
 // Lanterns
   fill('#575552')
   rect(LanternsX, LanternsY, 15, 125)
+  fill(LanternsColor);
+  circle(LanternsX + 7.5, LanternsY + 8, 13);
+
+  fill('#575552')
+  rect(LanternsX + 150, LanternsY, 15, 125)
+  fill(LanternsColor);
+  circle(LanternsX + 7.5 + 150, LanternsY + 8, 13);
+  
+  fill('#575552')
+  rect(LanternsX + 300, LanternsY, 15, 125)
+  fill(LanternsColor);
+  circle(LanternsX + 7.5 + 300, LanternsY + 8, 13);
+
+  fill('#575552')
+  rect(LanternsX + 450, LanternsY, 15, 125)
+  fill(LanternsColor);
+  circle(LanternsX + 7.5 + 450, LanternsY + 8, 13);
+
+  fill('#575552')
+  rect(LanternsX + 605, LanternsY, 15, 125)
+  fill(LanternsColor);
+  circle(LanternsX + 7.5 + 605, LanternsY + 8, 13);
+
+  fill('#575552')
+  rect(LanternsX + 750, LanternsY, 15, 125)
+  fill(LanternsColor);
+  circle(LanternsX + 7.5 + 750, LanternsY + 8, 13);
 
 // Blauwe auto
   fill('blue');
@@ -421,6 +451,7 @@ boomTijd = boomTijd % 30
   fill('black');
   circle(car2v + 20, 325, 30);
   circle(car2b - 10, 325, 30);
+  fill(HeadlightsColor);
   circle(car2b + 20, 295, 10);
   
   if(car2v >= 900) {
@@ -435,6 +466,7 @@ boomTijd = boomTijd % 30
   fill('black');
   circle(car3v + 20, 325, 30);
   circle(car3b - 10, 325, 30);
+  fill(HeadlightsColor);
   circle(car3b + 20, 295, 10);
 
   if(car3v >= 900) {
@@ -449,6 +481,7 @@ boomTijd = boomTijd % 30
   fill('black');
   circle(car1v + 20, 375, 30);
   circle(car1b - 10, 375, 30);
+  fill(HeadlightsColor);
   circle(car1b + 20, 345, 10);
 
   if(car1v >= 900) {
@@ -463,19 +496,12 @@ boomTijd = boomTijd % 30
   fill('black');
   circle(car4v + 20, 375, 30);
   circle(car4b - 10, 375, 30);
+  fill(HeadlightsColor);
   circle(car4b + 20, 345, 10);
 
   if(car4v >= 900) {
     car4v = -150
     car4b = -40
-  }
-
-  if (day == false) {
-  fill('#dbd823');
-  circle(car1b + 20, 345, 10); // Koplampen licht blauwe auto
-  circle(car2b + 20, 295, 10); // Koplampen blauwe auto
-  circle(car3b + 20, 295, 10); // Koplampen rode auto
-  circle(car4b + 20, 345, 10); // Koplampen licht groene auto
   }
 }
 
@@ -515,7 +541,6 @@ function mousePressed(){
     mouseY > car3ty && mouseX < car3ty + car3th) {
     if (RickRoll.isPlaying()) {
         RickRoll.stop();
-        console.log('Toeter van Rick.');
     }
     else {
         RickRoll.play();
@@ -530,7 +555,7 @@ function mousePressed(){
     }
     else {
         Watermeloen.play();
-        console.log('Bel van winkelier.');
+        console.log('Fietsbel van klant.');
     }
   }
 }
