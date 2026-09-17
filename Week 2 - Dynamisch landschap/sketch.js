@@ -1,79 +1,74 @@
 // Variablen zon
-  let sun = 200; // X-positie
-  let sunspeed = 0.5; // Snelheid van verplaatsing
-  let suny = 65; // Y-positie
-  let suna = 110; // Grootte zon achterkant
-  let sunv = 75; // Grootte zon voorkant
-  let day = true; // Schakeling of het dag of nacht is
-  let SunColor; // Zonkleur
+let sun = 200; // X-positie
+let sunspeed = 0.5; // Snelheid van verplaatsing
+let suny = 65; // Y-positie
+let suna = 110; // Grootte zon achterkant
+let sunv = 75; // Grootte zon voorkant
+let day = true; // Schakeling of het dag of nacht is
+let SunColor; // Zonkleur
 
 // Variablen Clouds
-  let cloudslinks = 60;
-  let cloudsmidden = 300;
-  let cloudsrechts = 600;
-  let cloudssnel = 500;
-  let cloudsspeed = -0.5;
-  let cloudsspeedsnel = -1;
-  let CloudsColor;
-  let CloudsColorSh;
+let cloudslinks = 60;
+let cloudsmidden = 300;
+let cloudsrechts = 600;
+let cloudssnel = 500;
+let cloudsspeed = -0.5;
+let cloudsspeedsnel = -1;
+let CloudsColor;
+let CloudsColorSh;
 
 // Variablen Traffic Light
-  let TrafficRed = 'black';
-  let TrafficOrange = 'black';
-  let TrafficGreen = 'green';
-  let TrafficTimer = 0;
-  let TrafficSpeed = 0.5;
-  let TrafficRound = false;
+
 
 // Variablen car
-  let car1v = 170;
-  let car1b = 280;
-  let carspeed1 = 2.2;
-  let car1ty = 300; // Auto 1 y-as blok toeter
-  let car1tw = 110; // Auto 1 Width blok toeter
-  let car1th = 75; // Auto 1 hoogte blok toeter
+let car1v = 170;
+let car1b = 280;
+let carspeed1 = 2.2;
+let car1ty = 300; // Auto 1 y-as blok toeter
+let car1tw = 110; // Auto 1 Width blok toeter
+let car1th = 75; // Auto 1 hoogte blok toeter
 
-  let car2v = 100;
-  let car2b = 210;
-  let carspeed2 = 2.8;
-  let car2ty = 250; // Auto 2 y-as blok toeter
-  let car2tw = 110; // Auto 2 Width blok toeter
-  let car2th = 75; // Auto 2 hoogte blok toeter
+let car2v = 100;
+let car2b = 210;
+let carspeed2 = 2.8;
+let car2ty = 250; // Auto 2 y-as blok toeter
+let car2tw = 110; // Auto 2 Width blok toeter
+let car2th = 75; // Auto 2 hoogte blok toeter
 
-  let car3v = 500;
-  let car3b = 610;
-  let carspeed3 = 3.2;
-  let car3ty = 250; // Auto 3 y-as blok toeter
-  let car3tw = 110; // Auto 3 Width blok toeter
-  let car3th = 75; // Auto 3 hoogte blok toeter
+let car3v = 500;
+let car3b = 610;
+let carspeed3 = 3.2;
+let car3ty = 250; // Auto 3 y-as blok toeter
+let car3tw = 110; // Auto 3 Width blok toeter
+let car3th = 75; // Auto 3 hoogte blok toeter
 
-  let car4v = 670;
-  let car4b = 780;
-  let carspeed0 = 2;
-  let car4ty = 300; // Auto 4 y-as blok toeter
-  let car4tw = 110; // Auto 4 Width blok toeter
-  let car4th = 75; // Auto 4 hoogte blok toeter
+let car4v = 670;
+let car4b = 780;
+let carspeed0 = 2;
+let car4ty = 300; // Auto 4 y-as blok toeter
+let car4tw = 110; // Auto 4 Width blok toeter
+let car4th = 75; // Auto 4 hoogte blok toeter
 
-  let HeadlightsColor = 'black'
+let HeadlightsColor = 'black'
 
 // Sounds toeter
-  let toeter_druif;
-  let Auw_trap;
-  let RickRoll;
-  let Watermeloen;
+let toeter_druif;
+let Auw_trap;
+let RickRoll;
+let Watermeloen;
 
 // Variablen boom
-  let boomx = 62; // X-as bladeren
-  let boomy = 184; // Y-as bladeren
-  let boomys = 189; // Y-as bladeren schaduw
-  let boomspeed = 0.2; // Snelheid dat bladeren heen en weer gaan
-  let boomronde = false;
-  let boomTijd = 0;
+let boomx = 62; // X-as bladeren
+let boomy = 184; // Y-as bladeren
+let boomys = 189; // Y-as bladeren schaduw
+let boomspeed = 0.2; // Snelheid dat bladeren heen en weer gaan
+let boomronde = false;
+let boomTijd = 0;
 
 // Lanterns
-  let LanternsX = 30;
-  let LanternsY = 175;
-  let LanternsColor = 'black';
+let LanternsX = 30;
+let LanternsY = 175;
+let LanternsColor = 'black';
 
 function preload() {
   toeter_druif = loadSound('doei_druif.mp3');
@@ -83,22 +78,22 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 400);  
+  createCanvas(800, 400);
 }
 
 function draw() {
-  
-// Variablen Strepen
+
+  // Variablen Strepen
   let LineStartXas = 0; // Startpunt streep (X-as)
   let LineEndXas = 50; // Streep lengte (Einde X-as)
 
-// Variablen bergen
+  // Variablen bergen
   let mx = 100; // Bovenzijde X-as
   let rx = 250; // Rechterkant X-as
   let lx = -50; // Linkerkant X-as
 
   // Sun / Day-Night cyclus
-  if(day == true) {
+  if (day == true) {
     suna = 110;
     SunColor = '#ffc900';
     background('#9bcef5');
@@ -106,7 +101,7 @@ function draw() {
     CloudsColorSh = '#cfc4b4';
     LanternsColor = 'black';
     HeadlightsColor = 'black';
-  }  
+  }
   else {
     suna = 0;
     SunColor = '#e3e2c7';
@@ -116,14 +111,14 @@ function draw() {
     LanternsColor = '#dbd823';
     HeadlightsColor = '#dbd823';
   }
-  
+
   fill(235, 150, 48, 100);
   circle(sun, suny, suna);
   fill(SunColor);
   circle(sun, suny, sunv);
-  
+
   sun = sun + sunspeed;
-  if(sun >= 855) {
+  if (sun >= 855) {
     sun = -55;
   }
 
@@ -136,11 +131,11 @@ function draw() {
     day = true
     console.log('Het is dag!');
   }
-// Road
+  // Road
   fill('grey');
   rect(0, 300, 800, 100);
 
-// Roadmarking
+  // Roadmarking
   strokeWeight(8);
   stroke('lightgrey');
   line(LineStartXas, 350, LineEndXas, 350);
@@ -148,7 +143,7 @@ function draw() {
   LineStartXas = LineStartXas + 100;
   LineEndXas = LineEndXas + 100;
   line(LineStartXas, 350, LineEndXas, 350);
-  
+
   LineStartXas = LineStartXas + 100;
   LineEndXas = LineEndXas + 100;
   line(LineStartXas, 350, LineEndXas, 350);
@@ -180,7 +175,7 @@ function draw() {
   stroke('black');
   strokeWeight(0);
 
-// Bergen
+  // Bergen
   // Midden X-as, Midden Y-as, Rechts X-as, Rechts Y-as, Links X-as, Links Y-as 
   fill('#636e6c');
   triangle(mx, 125, rx, 285, lx, 285);
@@ -203,20 +198,20 @@ function draw() {
   fill('#5d6664')
   triangle(mx, 115, rx, 285, lx, 285);
 
-// Grass
+  // Grass
   fill('green');
   rect(0, 290, 800, 10);
   fill('darkgreen');
   rect(0, 284, 800, 6);
 
-// Trees
-boomTijd += 1
-if (boomTijd >= 30){
-  boomspeed = boomspeed * -1
-}
+  // Trees
+  boomTijd += 1
+  if (boomTijd >= 30) {
+    boomspeed = boomspeed * -1
+  }
 
-boomTijd = boomTijd % 30
-// console.log(boomspeed);
+  boomTijd = boomTijd % 30
+  // console.log(boomspeed);
 
   fill('#87622e');
   rect(53, 194, 20, 90);
@@ -274,7 +269,7 @@ boomTijd = boomTijd % 30
   circle(boomx + 663, 204, 60);
   circle(boomx + 618, 204, 60);
 
-// Clouds
+  // Clouds
   // Cloudslinks
   fill(CloudsColorSh); // Shadow
   circle(cloudslinks, 45, 50);
@@ -286,7 +281,7 @@ boomTijd = boomTijd % 30
   circle(cloudslinks + 60, 50, 50);
 
   cloudslinks = cloudslinks + cloudsspeed;
-  if(cloudslinks <= -100) {
+  if (cloudslinks <= -100) {
     cloudslinks = 900;
   }
 
@@ -301,7 +296,7 @@ boomTijd = boomTijd % 30
   circle(cloudsmidden + 60, 60, 50);
 
   cloudsmidden = cloudsmidden + cloudsspeed;
-  if(cloudsmidden <= -100) {
+  if (cloudsmidden <= -100) {
     cloudsmidden = 900;
   }
 
@@ -316,11 +311,11 @@ boomTijd = boomTijd % 30
   circle(cloudsrechts + 60, 45, 50);
 
   cloudsrechts = cloudsrechts + cloudsspeed;
-  if(cloudsrechts <= -100) {
+  if (cloudsrechts <= -100) {
     cloudsrechts = 900;
   }
 
-// Clouds snel
+  // Clouds snel
   fill(CloudsColorSh); // Shadow
   circle(cloudssnel, 40, 50);
   circle(cloudssnel + 30, 35, 60);
@@ -331,89 +326,98 @@ boomTijd = boomTijd % 30
   circle(cloudssnel + 60, 45, 50);
 
   cloudssnel = cloudssnel + cloudsspeedsnel;
-  if(cloudssnel <= -100) {
+  if (cloudssnel <= -100) {
     cloudssnel = 900;
   }
-  
-// Traffic light
+
+  // Traffic light
+  if (TrafficColor == 0) {
+    fill('green');
+  }
+
+  if (TrafficColor == 1) {
+    fill('orange');
+  }
+
+  if (TrafficColor == 2) {
+    fill('red');
+  }
+
   fill('#575552');
   rect(600, 200, 32, 70);
   rect(611, 270, 10, 30);
-  fill(TrafficRed); // Red
-  circle(616, 213, 16);
-  fill(TrafficOrange); // Orange
-  circle(616, 235, 16);
-  fill(TrafficGreen); // Green
-  circle(616, 256, 16);
+  fill('black');
+  circle(616, 213, 16); // Rood
+  circle(616, 235, 16); // Oranje
+  circle(616, 256, 16); // Groen
 
-// Stoplicht op spatie weer op nieuw aangaan
-  if (keyCode === 32 && TrafficRound == false){
-    
-    TrafficTimer = TrafficTimer + TrafficSpeed;
-	  if (TrafficTimer >= 5) {
-      TrafficGreen = 'black';
-      TrafficOrange = 'orange'
+  // Timer system
+  // Stoplicht op spatie weer op nieuw aangaan
+  if (keyCode === 32 && TrafficRound == false) {
+
+    TrafficTimer += deltaTime * 0.001
+    if (TrafficTimer >= 2) { // Oranje
+      TrafficColor = 1;
+      circle(616, 235, 16);
     }
 
-    if (TrafficTimer >= 275) {
-      TrafficOrange = 'black';
-      TrafficRed = 'Red';
+    if (TrafficTimer >= 5) { // Rood
+      TrafficColor = 2;
+      circle(616, 213, 16);
     }
 
-    if (TrafficTimer >= 550) {
-      TrafficRed = 'black';
-      TrafficGreen = 'green';
+    if (TrafficTimer >= 7) { // Groen
       carspeed0 = 1.9;
       carspeed1 = 2.2;
       carspeed2 = 2.8;
       carspeed3 = 3.2;
     }
 
-    if (TrafficTimer >= 600) {
+    if (TrafficTimer >= 7.1) { // Reset
       TrafficTimer = 0;
       TrafficRound = true;
     }
   }
 
-  console.log(TrafficTimer);
+  console.log(TrafficColor);
 
-// Autos kunnen rijden als het groen en oranje is
-  if (TrafficGreen == 'green' || TrafficOrange == 'orange') {
-  car1v = car1v + carspeed0;
-  car1b = car1b + carspeed0;
-  
-  car2v = car2v + carspeed2;
-  car2b = car2b + carspeed2;
-  
-  car3v = car3v + carspeed3;
-  car3b = car3b + carspeed3;
+  // Autos kunnen rijden als het groen en oranje is
+  if (TrafficColor == 0 || TrafficColor == 1) {
+    car1v = car1v + carspeed0;
+    car1b = car1b + carspeed0;
 
-  car4v = car4v + carspeed1;
-  car4b = car4b + carspeed1;
+    car2v = car2v + carspeed2;
+    car2b = car2b + carspeed2;
+
+    car3v = car3v + carspeed3;
+    car3b = car3b + carspeed3;
+
+    car4v = car4v + carspeed1;
+    car4b = car4b + carspeed1;
   }
 
   // Auto's onderste baan
   // Licht groen stop voor stoplicht
-  if (TrafficOrange == 'orange' && car4v >= 475 && car4v <= 500) {
+  if (TrafficColor == 1 && car4v >= 475 && car4v <= 500) {
     carspeed1 = 0;
-     
+
     // Licht blauw stopt voor stoplicht achter groen
-    if (TrafficOrange == 'orange' && car1v >= 325 && car1v <= 350) {
+    if (TrafficColor == 1 && car1v >= 325 && car1v <= 350) {
       carspeed0 = 0;
     }
   }
   // Auto's bovenste baan
   // Rood stopt voor stoplicht
-  if (TrafficOrange == 'orange' && car3v >= 475 && car3v <= 500) {
+  if (TrafficColor == 1 && car3v >= 475 && car3v <= 500) {
     carspeed3 = 0;
-    
+
     // Blauw stopt voor stoplicht achter rood
-    if (TrafficOrange == 'orange' && car2v >= 325 && car2v <= 350) {
+    if (TrafficColor == 1 && car2v >= 325 && car2v <= 350) {
       carspeed2 = 0;
     }
   }
 
-// Lanterns
+  // Lanterns
   fill('#575552')
   rect(LanternsX, LanternsY, 15, 125)
   fill(LanternsColor);
@@ -423,7 +427,7 @@ boomTijd = boomTijd % 30
   rect(LanternsX + 150, LanternsY, 15, 125)
   fill(LanternsColor);
   circle(LanternsX + 7.5 + 150, LanternsY + 8, 13);
-  
+
   fill('#575552')
   rect(LanternsX + 300, LanternsY, 15, 125)
   fill(LanternsColor);
@@ -444,7 +448,7 @@ boomTijd = boomTijd % 30
   fill(LanternsColor);
   circle(LanternsX + 7.5 + 750, LanternsY + 8, 13);
 
-// Blauwe auto
+  // Blauwe auto
   fill('blue');
   rect(car2v, 250, 110, 75, 10);
   rect(car2b, 290, 20, 30);
@@ -453,13 +457,13 @@ boomTijd = boomTijd % 30
   circle(car2b - 10, 325, 30);
   fill(HeadlightsColor);
   circle(car2b + 20, 295, 10);
-  
-  if(car2v >= 900) {
+
+  if (car2v >= 900) {
     car2v = -150
     car2b = -40
   }
 
-// Rode auto
+  // Rode auto
   fill('red');
   rect(car3v, 250, 110, 75, 10);
   rect(car3b, 290, 20, 30);
@@ -469,12 +473,12 @@ boomTijd = boomTijd % 30
   fill(HeadlightsColor);
   circle(car3b + 20, 295, 10);
 
-  if(car3v >= 900) {
+  if (car3v >= 900) {
     car3v = -150
     car3b = -40
   }
 
-// Licht blauwe auto
+  // Licht blauwe auto
   fill('lightblue');
   rect(car1v, 300, 110, 75, 10);
   rect(car1b, 340, 20, 30);
@@ -484,12 +488,12 @@ boomTijd = boomTijd % 30
   fill(HeadlightsColor);
   circle(car1b + 20, 345, 10);
 
-  if(car1v >= 900) {
+  if (car1v >= 900) {
     car1v = -150
     car1b = -40
   }
-  
-// Licht groene auto
+
+  // Licht groene auto
   fill('lightgreen');
   rect(car4v, 300, 110, 75, 10);
   rect(car4b, 340, 20, 30);
@@ -499,19 +503,19 @@ boomTijd = boomTijd % 30
   fill(HeadlightsColor);
   circle(car4b + 20, 345, 10);
 
-  if(car4v >= 900) {
+  if (car4v >= 900) {
     car4v = -150
     car4b = -40
   }
 }
 
-function keyPressed(){
+function keyPressed() {
   // checken op de keycode van de spatie EN traffic timer == 0, dan resetten van trafficround variabele naar false
 
   if (keyCode === 32) {
     TrafficRound = false;
   }
-  
+
   // Bij het drukken op D wordt dag nacht of andersom.
   if (keyCode === 68) {
     if (day == false) {
@@ -524,8 +528,8 @@ function keyPressed(){
 }
 
 // Toeter als je op de muis klikt
-function mousePressed(){
-  if (mouseX > car1v && mouseX < car1v + car1tw && 
+function mousePressed() {
+  if (mouseX > car1v && mouseX < car1v + car1tw &&
     mouseY > car1ty && mouseX < car1ty + car1th) {
     if (Auw_trap.isPlaying()) {
       Auw_trap.stop();
@@ -550,22 +554,22 @@ function mousePressed(){
   if (mouseX > car3v && mouseX < car3v + car3tw &&
     mouseY > car3ty && mouseX < car3ty + car3th) {
     if (RickRoll.isPlaying()) {
-        RickRoll.stop();
+      RickRoll.stop();
     }
     else {
-        RickRoll.play();
-        console.log('Toeter van Rick.');
+      RickRoll.play();
+      console.log('Toeter van Rick.');
     }
   }
 
   if (mouseX > car4v && mouseX < car4v + car4tw &&
     mouseY > car4ty && mouseX < car4ty + car4th) {
     if (Watermeloen.isPlaying()) {
-        Watermeloen.stop();
+      Watermeloen.stop();
     }
     else {
-        Watermeloen.play();
-        console.log('Fietsbel van klant.');
+      Watermeloen.play();
+      console.log('Fietsbel van klant.');
     }
   }
 }
