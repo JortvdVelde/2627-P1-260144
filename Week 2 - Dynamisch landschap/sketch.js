@@ -1,6 +1,6 @@
 // Variablen zon
 let sun = 200; // X-positie
-let sunspeed = 0.5; // Snelheid van verplaatsing
+let sunspeed = 0.5; // Snelheid van verplaatsing (Standaard 0.5)
 let suny = 65; // Y-positie
 let suna = 110; // Grootte zon achterkant
 let sunv = 75; // Grootte zon voorkant
@@ -18,7 +18,11 @@ let CloudsColor;
 let CloudsColorSh;
 
 // Variablen Traffic Light
+let TrafficColor = 0; // Standaard kleur van stoplicht (0 = groen).
+let TrafficTimer = 0; // Zorgen dat de timer start op 0.
 
+let TrafficUseTimer = false; // Checkt of de timer aan en uitstaat.
+let TrafficOneRound = false; // Checkt of het stoplicht bezig is met een ronde.
 
 // Variablen car
 let car1v = 170;
@@ -35,8 +39,8 @@ let car2ty = 250; // Auto 2 y-as blok toeter
 let car2tw = 110; // Auto 2 Width blok toeter
 let car2th = 75; // Auto 2 hoogte blok toeter
 
-let car3v = 500;
-let car3b = 610;
+let car3v = 300;
+let car3b = 410;
 let carspeed3 = 3.2;
 let car3ty = 250; // Auto 3 y-as blok toeter
 let car3tw = 110; // Auto 3 Width blok toeter
@@ -110,6 +114,8 @@ function draw() {
     CloudsColorSh = '#5e5e51';
     LanternsColor = '#dbd823';
     HeadlightsColor = '#dbd823';
+
+
   }
 
   fill(235, 150, 48, 100);
@@ -331,18 +337,7 @@ function draw() {
   }
 
   // Traffic light
-  if (TrafficColor == 0) {
-    fill('green');
-  }
-
-  if (TrafficColor == 1) {
-    fill('orange');
-  }
-
-  if (TrafficColor == 2) {
-    fill('red');
-  }
-
+  // Vormen stoplicht
   fill('#575552');
   rect(600, 200, 32, 70);
   rect(611, 270, 10, 30);
@@ -351,35 +346,72 @@ function draw() {
   circle(616, 235, 16); // Oranje
   circle(616, 256, 16); // Groen
 
-  // Timer system
-  // Stoplicht op spatie weer op nieuw aangaan
-  if (keyCode === 32 && TrafficRound == false) {
+  // Trafficcolor waarde een kleur geven
+  if (TrafficColor == 0) {
+    fill('green');
+    circle(616, 256, 16);
+  }
 
-    TrafficTimer += deltaTime * 0.001
-    if (TrafficTimer >= 2) { // Oranje
+  if (TrafficColor == 1) {
+    fill('orange');
+    circle(616, 235, 16);
+  }
+
+  if (TrafficColor == 2) {
+    fill('red');
+    circle(616, 213, 16);
+  }
+
+  // Timer
+  if (TrafficUseTimer == true) {
+    TrafficTimer += deltaTime * 0.001;
+    if (TrafficTimer >= 1) {
+      TrafficColor = 0;
+    }
+
+    if (TrafficTimer >= 4) {
       TrafficColor = 1;
-      circle(616, 235, 16);
     }
 
-    if (TrafficTimer >= 5) { // Rood
+    if (TrafficTimer >= 10) {
       TrafficColor = 2;
-      circle(616, 213, 16);
     }
 
-    if (TrafficTimer >= 7) { // Groen
+    if (TrafficTimer >= 13) {
+      TrafficColor = 0;
+      TrafficTimer = 0;
       carspeed0 = 1.9;
       carspeed1 = 2.2;
       carspeed2 = 2.8;
       carspeed3 = 3.2;
     }
-
-    if (TrafficTimer >= 7.1) { // Reset
-      TrafficTimer = 0;
-      TrafficRound = true;
-    }
   }
 
-  console.log(TrafficColor);
+  // Zorgen dat op spatiebalk de cyclus een keer het doet.
+  if (TrafficOneRound == true) {
+    TrafficTimer += deltaTime * 0.001;
+    if (TrafficTimer >= 1) {
+      TrafficColor = 0;
+    }
+
+    if (TrafficTimer >= 4) {
+      TrafficColor = 1;
+    }
+
+    if (TrafficTimer >= 10) {
+      TrafficColor = 2;
+    }
+
+    if (TrafficTimer >= 13) {
+      TrafficColor = 0;
+      TrafficTimer = 0;
+      TrafficOneRound = false;
+      carspeed0 = 1.9;
+      carspeed1 = 2.2;
+      carspeed2 = 2.8;
+      carspeed3 = 3.2;
+    }
+  }
 
   // Autos kunnen rijden als het groen en oranje is
   if (TrafficColor == 0 || TrafficColor == 1) {
@@ -396,16 +428,6 @@ function draw() {
     car4b = car4b + carspeed1;
   }
 
-  // Auto's onderste baan
-  // Licht groen stop voor stoplicht
-  if (TrafficColor == 1 && car4v >= 475 && car4v <= 500) {
-    carspeed1 = 0;
-
-    // Licht blauw stopt voor stoplicht achter groen
-    if (TrafficColor == 1 && car1v >= 325 && car1v <= 350) {
-      carspeed0 = 0;
-    }
-  }
   // Auto's bovenste baan
   // Rood stopt voor stoplicht
   if (TrafficColor == 1 && car3v >= 475 && car3v <= 500) {
@@ -414,6 +436,17 @@ function draw() {
     // Blauw stopt voor stoplicht achter rood
     if (TrafficColor == 1 && car2v >= 325 && car2v <= 350) {
       carspeed2 = 0;
+    }
+  }
+
+  // Auto's onderste baan
+  // Licht groen stop voor stoplicht
+  if (TrafficColor == 1 && car4v >= 475 && car4v <= 500) {
+    carspeed1 = 0;
+
+    // Licht blauw stopt voor stoplicht achter groen
+    if (TrafficColor == 1 && car1v >= 325 && car1v <= 350) {
+      carspeed0 = 0;
     }
   }
 
@@ -459,8 +492,13 @@ function draw() {
   circle(car2b + 20, 295, 10);
 
   if (car2v >= 900) {
-    car2v = -150
-    car2b = -40
+    car2v = -250
+    car2b = -140
+  }
+
+  if (day == false) {
+    fill(219, 216, 35, 100);
+    triangle(car2b + 15, 295, car2b + 100, 315, car2b + 100, 275);
   }
 
   // Rode auto
@@ -474,8 +512,13 @@ function draw() {
   circle(car3b + 20, 295, 10);
 
   if (car3v >= 900) {
-    car3v = -150
-    car3b = -40
+    car3v = -250
+    car3b = -140
+  }
+
+  if (day == false) {
+    fill(219, 216, 35, 100);
+    triangle(car3b + 15, 295, car3b + 100, 315, car3b + 100, 275);
   }
 
   // Licht blauwe auto
@@ -489,8 +532,13 @@ function draw() {
   circle(car1b + 20, 345, 10);
 
   if (car1v >= 900) {
-    car1v = -150
-    car1b = -40
+    car1v = -250
+    car1b = -140
+  }
+
+  if (day == false) {
+    fill(219, 216, 35, 100);
+    triangle(car1b + 15, 345, car1b + 100, 365, car1b + 100, 325);
   }
 
   // Licht groene auto
@@ -504,18 +552,17 @@ function draw() {
   circle(car4b + 20, 345, 10);
 
   if (car4v >= 900) {
-    car4v = -150
-    car4b = -40
+    car4v = -250
+    car4b = -140
+  }
+
+  if (day == false) {
+    fill(219, 216, 35, 100);
+    triangle(car4b + 15, 345, car4b + 100, 365, car4b + 100, 325);
   }
 }
 
 function keyPressed() {
-  // checken op de keycode van de spatie EN traffic timer == 0, dan resetten van trafficround variabele naar false
-
-  if (keyCode === 32) {
-    TrafficRound = false;
-  }
-
   // Bij het drukken op D wordt dag nacht of andersom.
   if (keyCode === 68) {
     if (day == false) {
@@ -524,6 +571,35 @@ function keyPressed() {
     else {
       day = false
     }
+  }
+
+  // Zelfstandig aanpassen stoplicht (T)
+  if (keyCode === 84) {
+    TrafficColor++;
+
+    if (TrafficColor > 2) {
+      TrafficColor = 0;
+    }
+    if (TrafficColor == 0) {
+      carspeed0 = 1.9;
+      carspeed1 = 2.2;
+      carspeed2 = 2.8;
+      carspeed3 = 3.2;
+    }
+  }
+
+  // Aan uit zetten automatische overgang (E)
+  if (keyCode === 69 && TrafficUseTimer == false) {
+    TrafficUseTimer = true;
+  }
+
+  else if (keyCode === 69 && TrafficUseTimer == true) {
+    TrafficUseTimer = false;
+  }
+
+  // 1x Cyclus uitvoeren en daarna stoppen
+  if (keyCode === 32 && TrafficOneRound == false) {
+    TrafficOneRound = true;
   }
 }
 
