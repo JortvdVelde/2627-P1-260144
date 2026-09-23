@@ -187,7 +187,7 @@ function draw() {
     Vlak1 == 2 && Vlak5 == 2 && Vlak9 == 2 || Vlak3 == 2 && Vlak5 == 2 && Vlak7 == 2) {
     RoodWin = true;
   }
-
+  
   // Kiezen wat de code moet doen als blauw wint
   if (BlauwWin == true) {
     fill('black');
