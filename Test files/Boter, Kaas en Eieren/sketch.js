@@ -15,7 +15,7 @@ let BlauwWin = false; // Check of blauw gewonnen heeft.
 let RoodWin = false; // Check of rood gewonnen heeft.
 let Gelijk = false; // Check of het gelijks is geworden
 
-let Reset = false;
+let Reset = false; // Zorgen dat je het bord kan reseten
 
 function setup() {
   createCanvas(450, 450);
@@ -143,6 +143,11 @@ function draw() {
     RoodWin = true;
   }
 
+  // Checken of het gelijk is
+  if (RoodWin == true && BlauwWin == true && Vakkleur[0] == 0 && Vakkleur[1] == 0 && Vakkleur[2] == 0 && Vakkleur[3] == 0 && Vakkleur[4] == 0 && Vakkleur[5] == 0 && Vakkleur[6] == 0 && Vakkleur[7] == 0 && Vakkleur[8] == 0) {
+    Gelijk = false
+  }
+
   // Tekst dat je kan beginnen door op het scherm te klikken
   if (RondeBezig == false && Reset == false) {
     fill('#b7ff00')
@@ -156,7 +161,6 @@ function draw() {
     textSize(20);
     text('Klik om het veld te resetten!', 95, 220);
 
-    
   }
 }
 
