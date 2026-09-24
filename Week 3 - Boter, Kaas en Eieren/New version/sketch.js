@@ -182,11 +182,20 @@ function draw() {
   }
 
   image(Tandwiel, 390, 390, 50, 50); // Afbeelding van tandwiel
-
   // Settings voor de colorpicker
   if (Settings == true) {
     fill('black'); // Kleur achtergrond
     rect(70, 65, 300, 300, 30); // Achtergrond speelbord
+
+    stroke('white');
+    strokeWeight(5);
+    line(45, 80, 65, 100);
+    line(45, 100, 65, 80);
+
+    fill('white')
+    textSize(15);
+    text('Kies hier je kleur', 100, 80)
+
   }
 }
 
@@ -210,7 +219,7 @@ function reset() {
 
 function mousePressed() {
   // Spel starten
-  if (RondeBezig == false && Reset == false) {
+  if (RondeBezig == false && Reset == false && Settings == false) {
     RondeBezig = true;
     Beurt = floor(random(1, 3)); // Random kiezen wie er begint
   }
@@ -223,6 +232,11 @@ function mousePressed() {
   if (mouseX > 390 && mouseX < 390 + 50 &&
     mouseY > 390 && mouseY < 390 + 50) {
       Settings = true;
+    }
+
+  if (mouseX > 45 && mouseX < 45 + 20 &&
+    mouseY > 80 && mouseY < 80 + 20 && Settings == true) {
+      Settings = false;
     }
 
   // Zorgen dat vakjes kleur krijgt als je erop klikt
