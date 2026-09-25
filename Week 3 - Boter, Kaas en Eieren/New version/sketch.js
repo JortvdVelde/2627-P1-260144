@@ -28,9 +28,6 @@ let Settings = false; // Kijkt of de settings open is.
 let SettingsXKeuze = 90; // X positie blokjes voor kleurkeuze
 let SettingsYKeuze = 150; // Y positie blokjes voor kleurkeuze
 
-let ScorePlayer1 = 0;
-let ScorePlayer2 = 0;
-
 function preload() {
   Klik = loadSound('klik_geluid.mp4');
   Tandwiel = loadImage('tandwiel.png');
