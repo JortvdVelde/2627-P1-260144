@@ -104,6 +104,7 @@ function draw() {
   Vakkleur[2]
 
   let VakjesCounter = 0;
+  
   // Vakjes kleur geven en zorgen dat er vakjes komt
   for (let x = 0; x < Kollomen; x++) {
     for (let y = 0; y < Rij; y++) {
