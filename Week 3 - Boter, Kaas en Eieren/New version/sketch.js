@@ -25,8 +25,14 @@ let Player2Color = 'red'; // Geeft de kleur voor Player 2 (Standaard rood)
 
 let Settings = false; // Kijkt of de settings open is.
 
+let SettingsXKeuze = 90; // X positie blokjes voor kleurkeuze
+let SettingsYKeuze = 150; // Y positie blokjes voor kleurkeuze
+
+let ScorePlayer1 = 0;
+let ScorePlayer2 = 0;
+
 function preload() {
-  Klik = loadSound('klikgeluid.wav');
+  Klik = loadSound('klik_geluid.mp4');
   Tandwiel = loadImage('tandwiel.png');
 }
 
@@ -113,11 +119,11 @@ function draw() {
       }
 
       else if (Vakkleur[VakjesCounter] == 1) {
-        fill('blue');
+        fill(Player1Color);
       }
 
       else if (Vakkleur[VakjesCounter] == 2) {
-        fill('red');
+        fill(Player2Color);
       }
 
       rect(VakX, VakY, VakGrootte, VakGrootte, 30)
@@ -187,15 +193,66 @@ function draw() {
     fill('black'); // Kleur achtergrond
     rect(70, 65, 300, 300, 30); // Achtergrond speelbord
 
-    stroke('white');
-    strokeWeight(5);
-    line(45, 80, 65, 100);
-    line(45, 100, 65, 80);
+    stroke('white'); // Kleur kruisje
+    strokeWeight(5); // Dikte van lijn van kruisjes
+    line(45, 80, 65, 100); // Kruisje om scherm weg te krijgen
+    line(45, 100, 65, 80); // Kruisje om scherm weg te krijgen
 
-    fill('white')
+    strokeWeight(0);
+    fill('white');
     textSize(15);
-    text('Kies hier je kleur', 100, 80)
+    textStyle(BOLD);
+    text('Kies hier je kleur', 160, 100); // Tekst met instructie
 
+    fill(Player1Color); // Kleurt de tekst met Player1 zijn kleur
+    textStyle(BOLD);
+    text('Player 1', 120, 130); // Tekst om player 1 te laten zien
+
+    fill(Player2Color); // Kleurt de tekst met Player2 zijn kleur
+    textStyle(BOLD);
+    text('Player 2', 270, 130); // Tekst om player 2 te laten zien
+
+    // Vakjes kleurkeuze player1
+    fill('blue');
+    rect(SettingsXKeuze, SettingsYKeuze, 50, 50, 10);
+    fill('green');
+    rect(SettingsXKeuze, SettingsYKeuze + 60, 50, 50, 10);
+    fill('orange');
+    rect(SettingsXKeuze, SettingsYKeuze + 120, 50, 50, 10);
+    fill('purple');
+    rect(SettingsXKeuze + 60, SettingsYKeuze, 50, 50, 10);
+    fill('red');
+    rect(SettingsXKeuze + 60, SettingsYKeuze + 60, 50, 50, 10);
+    fill('cyan');
+    rect(SettingsXKeuze + 60, SettingsYKeuze + 120, 50, 50, 10);
+
+    // Vakjes kleurkeuze Player2
+    fill('blue');
+    rect(SettingsXKeuze + 150, SettingsYKeuze, 50, 50, 10);
+    fill('green');
+    rect(SettingsXKeuze + 150, SettingsYKeuze + 60, 50, 50, 10);
+    fill('orange');
+    rect(SettingsXKeuze + 150, SettingsYKeuze + 120, 50, 50, 10);
+    fill('purple');
+    rect(SettingsXKeuze + 210, SettingsYKeuze, 50, 50, 10);
+    fill('red');
+    rect(SettingsXKeuze + 210, SettingsYKeuze + 60, 50, 50, 10);
+    fill('cyan');
+    rect(SettingsXKeuze + 210, SettingsYKeuze + 120, 50, 50, 10);
+
+    fill('white'); // Kleur letters
+    textSize(10);
+    textStyle(BOLD);
+    text('Gekozen kleur:', 90, 345); // Player 1 welke kleur gekozen
+    fill(Player1Color); // Kleur krijgt gekozen kleur
+    rect(170, 330, 25, 25, 7); // Vakje voor de kleur die gekozen is
+
+    fill('white'); // Kleur letters
+    textSize(10);
+    textStyle(BOLD);
+    text('Gekozen kleur:', 240, 345); // Player 1 welke kleur gekozen
+    fill(Player2Color); // Kleur krijgt gekozen kleur
+    rect(320, 330, 25, 25, 7); // Vakje voor de kleur die gekozen is
   }
 }
 
@@ -229,18 +286,81 @@ function mousePressed() {
     reset();
   }
 
+  // Zorgen dat als je op tandwiel klikt de settings kan openen
   if (mouseX > 390 && mouseX < 390 + 50 &&
     mouseY > 390 && mouseY < 390 + 50) {
-      Settings = true;
-    }
+    Settings = true;
+    RondeBezig = false;
+  }
 
+  // Zorgen dat de settings sluit als je op kruis klikt
   if (mouseX > 45 && mouseX < 45 + 20 &&
     mouseY > 80 && mouseY < 80 + 20 && Settings == true) {
-      Settings = false;
+    Settings = false;
+    RondeBezig = true;
+  }
+
+  // Als het vakje wordt gekozen dan krijg je die kleur.
+  // Kolom 1 voor player1
+  if (Settings == true) {
+    if (mouseX > SettingsXKeuze && mouseX < SettingsXKeuze + 50 &&
+      mouseY > SettingsYKeuze && mouseY < SettingsYKeuze + 50 && Player2Color != 'blue') {
+      Player1Color = 'blue';
+    }
+    if (mouseX > SettingsXKeuze && mouseX < SettingsXKeuze + 50 &&
+      mouseY > SettingsYKeuze + 60 && mouseY < SettingsYKeuze + 60 + 50 && Player2Color != 'green') {
+      Player1Color = 'green';
+    }
+    if (mouseX > SettingsXKeuze && mouseX < SettingsXKeuze + 50 &&
+      mouseY > SettingsYKeuze + 120 && mouseY < SettingsYKeuze + 120 + 50 && Player2Color != 'orange') {
+      Player1Color = 'orange';
     }
 
+    // Kolom 2 voor player1
+    if (mouseX > SettingsXKeuze + 60 && mouseX < SettingsXKeuze + 60 + 50 &&
+      mouseY > SettingsYKeuze && mouseY < SettingsYKeuze + 50 && Player2Color != 'purple') {
+      Player1Color = 'purple';
+    }
+    if (mouseX > SettingsXKeuze + 60 && mouseX < SettingsXKeuze + 60 + 50 &&
+      mouseY > SettingsYKeuze + 60 && mouseY < SettingsYKeuze + 60 + 50 && Player2Color != 'red') {
+      Player1Color = 'red';
+    }
+    if (mouseX > SettingsXKeuze + 60 && mouseX < SettingsXKeuze + 60 + 50 &&
+      mouseY > SettingsYKeuze + 120 && mouseY < SettingsYKeuze + 120 + 50 && Player2Color != 'cyan') {
+      Player1Color = 'cyan';
+    }
+
+    // Kolom 1 voor player2
+    if (mouseX > SettingsXKeuze + 150 && mouseX < SettingsXKeuze + 150 + 50 &&
+      mouseY > SettingsYKeuze && mouseY < SettingsYKeuze + 50 && Player1Color != 'blue') {
+      Player2Color = 'blue';
+    }
+    if (mouseX > SettingsXKeuze + 150 && mouseX < SettingsXKeuze + 150 + 50 &&
+      mouseY > SettingsYKeuze + 60 && mouseY < SettingsYKeuze + 60 + 50 && Player1Color != 'green') {
+      Player2Color = 'green';
+    }
+    if (mouseX > SettingsXKeuze + 150 && mouseX < SettingsXKeuze + 150 + 50 &&
+      mouseY > SettingsYKeuze + 120 && mouseY < SettingsYKeuze + 120 + 50 && Player1Color != 'orange') {
+      Player2Color = 'orange';
+    }
+
+    // Kolom 2 voor player2
+    if (mouseX > SettingsXKeuze + 210 && mouseX < SettingsXKeuze + 210 + 50 &&
+      mouseY > SettingsYKeuze && mouseY < SettingsYKeuze + 50 && Player1Color != 'purple') {
+      Player2Color = 'purple';
+    }
+    if (mouseX > SettingsXKeuze + 210 && mouseX < SettingsXKeuze + 210 + 50 &&
+      mouseY > SettingsYKeuze + 60 && mouseY < SettingsYKeuze + 60 + 50 && Player1Color != 'red') {
+      Player2Color = 'red';
+    }
+    if (mouseX > SettingsXKeuze + 210 && mouseX < SettingsXKeuze + 210 + 50 &&
+      mouseY > SettingsYKeuze + 120 && mouseY < SettingsYKeuze + 120 + 50 && Player1Color != 'cyan') {
+      Player2Color = 'cyan';
+    }
+  }
+
   // Zorgen dat vakjes kleur krijgt als je erop klikt
-  if (RondeBezig == true && Settings == false) {
+  if (RondeBezig == true) {
     let VakjesCounter = 0;
 
     for (let x = 0; x < 3; x++) {
