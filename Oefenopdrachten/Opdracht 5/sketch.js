@@ -73,15 +73,22 @@ function draw() {
   }
 
   // Acordeon maken
-  for (let index = 0; index < 21; index++) {
-    fill('white');
-
-    if (index <= 11) {
+  fill(140, 140, 140);
+  for (let index = 0; index < 21; index++) {  
+    if (index < 11) {
       rect(630, 110 + index * 10, 30 + index * 10, 10);
     }
 
-    if (index > 11) {
-      rect(630, 110 + index * 10, 30 + index * 10, 10);
+    if (index >= 11) {
+      rect(630, 110 + index * 10, 230 - index * 10, 10);
+    }
+
+    if (index % 2 !== 0) {
+      fill(140, 140, 140);
+    }
+
+    else {
+      fill(255, 255, 255);
     }
 
   }

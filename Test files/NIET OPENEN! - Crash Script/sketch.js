@@ -1,8 +1,10 @@
 let Amount = 100000;
 let Reset = Amount - 1;
+let FC = 500
 
 function setup() {
   createCanvas(450, 400);
+  frameCount = FC
 
   for (let index = 0; index < Amount; index++) {
     console.log('Loop 1: ' + index);
@@ -167,6 +169,7 @@ function setup() {
 
 function draw() {
   background(220);
+  frameCount = FC
 
   for (let index = 0; index < Amount; index++) {
     console.log('Loop 1: ' + index);
