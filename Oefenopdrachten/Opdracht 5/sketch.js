@@ -17,7 +17,7 @@ function draw() {
 
   // Zorgen dat de 10 blokjes worden getekend en dat blokje 7 ingekleurd word.
   for (let index = 0; index < 10; index++) {
-    if (index == 7) {
+    if (index == 6) {
       fill('blue');
     }
     else {

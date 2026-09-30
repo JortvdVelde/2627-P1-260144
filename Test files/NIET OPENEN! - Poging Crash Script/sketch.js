@@ -1,4 +1,4 @@
-let Amount = 100000;
+let Amount = 500000;
 let Reset = Amount - 1;
 let FC = 500
 

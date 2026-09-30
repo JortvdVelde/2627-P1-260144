@@ -1,5 +1,18 @@
+let Kleuren = []
+
+let Tellen = []
+
 function setup() {
   createCanvas(400, 400);
+
+  for (let index = 0; index < 5; index++) {
+    Kleuren.push([random(0, 255), random(0, 255), random(0, 255)])
+  }
+
+  for (let index = 0; index < 12; index++) {
+    Tellen.push(round(random(0, 100)));
+  }
+
 }
 
 function draw() {
@@ -62,7 +75,7 @@ function draw() {
   let Uitkomst = 0;
   for (let index = 0; index < Optellen.length; index++) {
     if (index < Optellen2.length) {
-      Uitkomst += Optellen2[index]
+      Uitkomst += Optellen2[index];
     }
     Uitkomst += Optellen[index];
 
@@ -71,7 +84,7 @@ function draw() {
 
   // Letters op tellen. 
   for (let index = 0; index < Woord.length; index++) {
-    if(Woord[index] == 'e'){
+    if (Woord[index] == 'e') {
       WoordCount++
     }
   }
@@ -85,10 +98,24 @@ function draw() {
   }
 
   // Zorgen dat er random kleuren komen op een rij
-  
-  for (let index = 0; index < 5; index++) {
-    fill(random(0, 255), random(0, 255), random(0, 255));
-    rect(140 + index * 40, 270, 40, 40)
-    
+  let UitkomstTellen = 0;
+  let UitkomstGemiddeld = 0;
+
+  for (let index = 0; index < Kleuren.length; index++) {
+    fill(Kleuren[index]);
+    rect(140 + index * 40, 270, 40, 40);
   }
+
+  // 12 random getallen + optellen
+  for (let index = 0; index < Tellen.length; index++) {
+    fill('black');
+    text(Tellen[0 + index * 1], 260, 15 + index * 15);
+
+    UitkomstTellen += Tellen[index];
+
+    UitkomstGemiddeld = UitkomstTellen / Tellen.length;
+  }
+  text('Totaal: ' + UitkomstTellen, 260, 200);
+  text('Gem: ' + UitkomstGemiddeld, 260, 215);
+
 }
