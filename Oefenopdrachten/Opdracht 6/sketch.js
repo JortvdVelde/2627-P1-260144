@@ -109,7 +109,7 @@ function draw() {
   // 12 random getallen + optellen
   for (let index = 0; index < Tellen.length; index++) {
     fill('black');
-    text(Tellen[0 + index * 1], 260, 15 + index * 15);
+    text(Tellen[index * 1], 260, 15 + index * 15);
 
     UitkomstTellen += Tellen[index];
 
