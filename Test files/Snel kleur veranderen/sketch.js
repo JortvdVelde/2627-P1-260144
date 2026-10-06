@@ -13,8 +13,22 @@ let CircleHeenX = 1; // Zorgen dat de circles van links naar rechts kunnen
 let CircleHeenY = 1; // Zorgen dat de circles van boven naar beneden kunnen
 let CircleGrootteB = 1 // Zorgen dat de circle groter en kleiner kunnen worden
 
+let cirkels = [];
+
 function setup() {
   createCanvas(2000, 2000);
+
+  for (let index = 0; index < 3000; index++) {
+    let C = {
+      xPositie: random(50, width),
+      yPositie: random(50, height),
+      radius: random(10, 50),
+      snelheidX: random(-5, 5),
+      snelheidY: random(-5, 5)
+    }
+
+    cirkels.push(C);
+  }
 }
 
 function draw() {
@@ -157,10 +171,36 @@ function draw() {
     KleurCircle.push([random(0, 255), random(0, 255), random(0, 255)]) // Zorgen dat de array gevuld word met een nieuwe combinatie
   }
 
+  for (let index = 0; index < cirkels.length; index++) {
+    let cirkel = cirkels[index];
+
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    circle(cirkel.xPositie, cirkel.yPositie, cirkel.radius);
+    cirkel.xPositie = cirkel.xPositie + cirkel.snelheidX;
+    cirkel.yPositie = cirkel.yPositie + cirkel.snelheidY;
+
+    if (cirkel.xPositie < 0) {
+      cirkel.snelheidX *= -1
+    }
+
+    if (cirkel.yPositie < 0) {
+      cirkel.snelheidY *= -1
+    }
+
+    if (cirkel.xPositie > width) {
+      cirkel.snelheidX *= -1
+    }
+
+    if (cirkel.yPositie > height) {
+      cirkel.snelheidY *= -1
+    }
+  }
 
   round(Timer += deltaTime * 0.001)
 
   fill('black');
   textSize(50);
   text(Timer, 250, 250);
+
+
 }
