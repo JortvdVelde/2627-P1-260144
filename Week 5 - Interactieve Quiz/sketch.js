@@ -358,7 +358,15 @@ function mousePressed() {
   if (vraag.vraagtype == 'janee' || vraag.vraagtype == 'janeefoto' || vraag.vraagtype == 'trueorfalse') { // Zorgen dat het alleen werkt bij vragen met 2 antwoorden
     if (mouseX > 30 && mouseX < 30 + 460 &&
       mouseY > 550 && mouseY < 550 + 200) { // vak links
+      if (Vragen.JuisteAntwoord == 0) {
+        VraagJuist0 = 'green';
+        VraagJuist1 = 'red';
+      }
 
+      else {
+        VraagJuist0 = 'red';
+        VraagJuist1 = 'green';
+      }
     }
     else if (mouseX > 510 && mouseX < 510 + 460 &&
       mouseY > 550 && mouseY < 550 + 200) { // vak rechts
