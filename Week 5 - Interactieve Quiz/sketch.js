@@ -1,4 +1,4 @@
-let ActieveVraag = 0; // Welke vraag er wordt laten zien; 
+let ActieveVraag = 0; // Welke vraag er wordt laten zien; (25 = eind & 26 = begin)
 let Vragen = [ // Vragen van de quiz
   { // Vraag 1
     Vraag: 'Welke van de drie is een kamerplant?',
@@ -16,7 +16,7 @@ let Vragen = [ // Vragen van de quiz
     Vraag: 'Kan je hier mensen van rechts verwachten?',
     Antwoorden: ['Ja', 'Nee'],
     JuisteAntwoord: 0,
-    TypeVraag: "janeefoto",
+    TypeVraag: "janee",
   },
   { // Vraag 4
     Vraag: 'Hoeveel is 46 x 53 / 46 - 53?',
@@ -151,6 +151,17 @@ let Vragen = [ // Vragen van de quiz
     TypeVraag: "trueorfalse"
   }];
 
+// Kleuren quiz
+let VraagVlak = 'white'; // Vraag vlak boven
+let TekstKleur = 'black'; // Kleur van de teksten
+
+// Score
+let PogingAantal = 0; // Houd bij hoe vaak je een fout hebt gemaakt bij 1 vraag
+let Score = 0; // Punten bij houden als het goed is.
+
+// Verder gaan na vraag beantwoorden
+let VraagBeantwoord = 0; // Bijhouden of je door kan naar de volgende vraag (0 = NIET beantwoord, 1 = WEL beantwoord)
+
 // Foto's inladen 
 let Kamerplant;
 let KamerplantJungle;
@@ -159,6 +170,12 @@ let Pinguins;
 let Wereldkaart;
 let Verkeersbord;
 let Quiz;
+
+// Buttons
+let antwoordKnop1;
+let antwoordKnop2;
+let antwoordKnop3;
+let antwoordKnop4;
 
 
 function preload() {
@@ -180,6 +197,106 @@ function preload() {
 
 function setup() {
   createCanvas(1000, 800);
+
+  antwoordKnop1 = createButton("Antwoord links boven");
+  antwoordKnop1.position(38, 558);
+  antwoordKnop1.size(460, 100);
+  antwoordKnop1.mousePressed(antwoord1Gedrukt);
+  antwoordKnop1.style('font-size', '32px');
+
+  antwoordKnop2 = createButton("Antwoord links onder");
+  antwoordKnop2.position(38, 678);
+  antwoordKnop2.size(460, 100);
+  antwoordKnop2.mousePressed(antwoord2Gedrukt);
+  antwoordKnop2.style('font-size', '32px');
+
+  antwoordKnop3 = createButton("Antwoord rechts boven");
+  antwoordKnop3.position(518, 558);
+  antwoordKnop3.size(460, 100);
+  antwoordKnop3.mousePressed(antwoord3Gedrukt);
+  antwoordKnop3.style('font-size', '32px');
+
+  antwoordKnop4 = createButton("Antwoord rechts onder");
+  antwoordKnop4.position(518, 678);
+  antwoordKnop4.size(460, 100);
+  antwoordKnop4.mousePressed(antwoord4Gedrukt);
+  antwoordKnop4.style('font-size', '32px');
+}
+
+function antwoord1Gedrukt() {
+  let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
+  if (vraag.JuisteAntwoord == 0) {
+    antwoordKnop1.style('background-color', '#39B827');
+    antwoordKnop2.style('background-color', '#FF2C00');
+    antwoordKnop3.style('background-color', '#FF2C00');
+    antwoordKnop4.style('background-color', '#FF2C00');
+    VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
+    if (PogingAantal == 0) {
+      Score = Score += 1;
+    }
+  }
+
+  else {
+    antwoordKnop1.style('background-color', '#FF2C00');
+    PogingAantal = PogingAantal += 1;
+  }
+}
+
+function antwoord2Gedrukt() {
+  let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
+  if (vraag.JuisteAntwoord == 1) {
+    antwoordKnop1.style('background-color', '#FF2C00');
+    antwoordKnop2.style('background-color', '#39B827');
+    antwoordKnop3.style('background-color', '#FF2C00');
+    antwoordKnop4.style('background-color', '#FF2C00');
+    VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
+    if (PogingAantal == 0) {
+      Score = Score += 1;
+    }
+  }
+
+  else {
+    antwoordKnop2.style('background-color', '#FF2C00');
+    PogingAantal = PogingAantal += 1;
+  }
+}
+
+function antwoord3Gedrukt() {
+  let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
+  if (vraag.JuisteAntwoord == 2) {
+    antwoordKnop1.style('background-color', '#FF2C00');
+    antwoordKnop2.style('background-color', '#FF2C00');
+    antwoordKnop3.style('background-color', '#39B827');
+    antwoordKnop4.style('background-color', '#FF2C00');
+    VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
+    if (PogingAantal == 0) {
+      Score = Score += 1;
+    }
+  }
+
+  else {
+    antwoordKnop3.style('background-color', '#FF2C00');
+    PogingAantal = PogingAantal += 1;
+  }
+}
+
+function antwoord4Gedrukt() {
+  let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
+  if (vraag.JuisteAntwoord == 3) {
+    antwoordKnop1.style('background-color', '#FF2C00');
+    antwoordKnop2.style('background-color', '#FF2C00');
+    antwoordKnop3.style('background-color', '#FF2C00');
+    antwoordKnop4.style('background-color', '#39B827');
+    VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
+    if (PogingAantal == 0) {
+      Score = Score += 1;
+    }
+  }
+
+  else {
+    antwoordKnop4.style('background-color', '#FF2C00');
+    PogingAantal = PogingAantal += 1;
+  }
 }
 
 function draw() {
@@ -187,33 +304,37 @@ function draw() {
   textWrap(WORD); // Zorgen dat teksten niet groter worden dan bepaald gegeven
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
 
-  if (vraag.TypeVraag == 'meerkeuze') { // Meerkeuze in de vraagtype omzetten naar een layout
-    meerkeuze()
-  }
-  else if (vraag.TypeVraag == 'janee') { // Ja of nee in de vraagtype omzetten naar een layout
-    janee()
-  }
-  else if (vraag.TypeVraag == 'janeefoto') {
-    janeefoto()
-  }
-  else if (vraag.TypeVraag == 'trueorfalse') { // Waar of niet waar in de vraagtype omzetten naar een layout
-    trueorfalse()
-  }
-  else if (vraag.TypeVraag == 'fotovraag1') { // Fotovraag met 1 plaatje in de vraagtype omzetten naar een layout
-    fotoVraag1()
-  }
-  else if (vraag.TypeVraag == 'fotovraag3') { // Fotovraag met 3 plaatjes in de vraagtype omzetten naar een layout
-    fotoVraag3()
+  if (vraag.TypeVraag == 'fotoVraag3') { // Fotovraag met 3 plaatjes in de vraagtype omzetten naar een layout
+    fotoVraag3() // Inladen template
   }
 
-  if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse') {
-    image(Quiz, 290, 250, 400, 200)
+  if (vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse') {
+    antwoordKnop3.hide()
+    antwoordKnop4.hide()
+  }
+  else if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'fotovraag1' || vraag.TypeVraag == 'fotovraag3') {
+    antwoordKnop3.show()
+    antwoordKnop4.show()
   }
 
-  // Vraag
-  textSize(30)
-  textStyle(BOLD);
-  text(vraag.Vraag, 60, 80, 920) // zorgen dat de vragen op het scherm komen
+  if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse') { // Zorgen voor opvulfoto
+    image(Quiz, 290, 250, 400, 200) // Quiz foto
+  }
+
+  if (ActieveVraag == 25) {
+    eindscherm()
+    antwoordKnop1.hide()
+    antwoordKnop2.hide()
+    antwoordKnop3.hide()
+    antwoordKnop4.hide()
+  }
+
+
+  // Buttons antwoorden geven
+  antwoordKnop1.html(vraag.Antwoorden[0]);
+  antwoordKnop2.html(vraag.Antwoorden[1]);
+  antwoordKnop3.html(vraag.Antwoorden[2]);
+  antwoordKnop4.html(vraag.Antwoorden[3]);
 
   // Foto's plaatsen juiste plekken
   if (ActieveVraag == 0) { // Vraag 1 (Kamerplant)
@@ -230,147 +351,88 @@ function draw() {
     image(Verkeersbord, 350, 200, 300, 300)
   }
 
-  console.log(ActieveVraag);
+  // Zorgen voor vlak voor vraag en tekst
+  if (VraagBeantwoord == 0) {
+    fill(VraagVlak); // Zorgen dat het vlak met de vraag de juiste kleur krijgt
+    rect(40, 40, 910, 150, 30); // Balk voor de vraag
+    
+// Vraag
+fill('black')
+  textSize(30) // Grootte van de tekst 
+  textStyle(BOLD);
+  text(vraag.Vraag, 60, 80, 920) // zorgen dat de vragen op het scherm komen
+  }
+  
+  // Zorgen dat je op verder kan klikken als vraag beantwoord is
+  else if (VraagBeantwoord == 1) {
+    Verder()
+  }
+  
+
+  console.log('Pogingen: ' + PogingAantal + ' Score: ' + Score);
 }
 
 function beginscherm() {
+  fill(VraagVlak);
   rect(40, 40, 910, 270, 30); // Balk voor bericht
   textStyle(BOLD);
   textSize(70);
+  fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
   text('Welkom bij de quiz!', 160, 130);
   textSize(50);
   text('Klik op het scherm om te beginnen.', 90, 230);
 }
 
-
-function meerkeuze() {
-  let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
-  rect(40, 40, 910, 150, 30); // Balk voor de vraag
-  rect(30, 550, 460, 100, 30); // Links boven
-  rect(30, 670, 460, 100, 30); // Links onder
-  rect(510, 550, 460, 100, 30); // Rechts boven
-  rect(510, 670, 460, 100, 30); // Rechts onder
-
-  // Antwoorden laten zien
-  textSize(40);
-  text(vraag.Antwoorden[0], 75, 610); // Links boven
-  text(vraag.Antwoorden[1], 75, 730); // Links onder
-  text(vraag.Antwoorden[2], 570, 610); // Rechts boven
-  text(vraag.Antwoorden[3], 570, 730); // Rechts onder
+function eindscherm() {
+  fill(VraagVlak);
+  rect(40, 40, 910, 270, 30); // Balk voor bericht
+  textStyle(BOLD);
+  textSize(70);
+  fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
+  text('Je hebt de quiz uitgespeeld!', 160, 130);
+  textSize(50);
+  text('De behaalde score = ' + Score, 90, 230);
 }
 
-function trueorfalse() {
-  rect(40, 40, 910, 150, 30); // Balk voor de vraag
-  textStyle(BOLD)
-  textSize(80)
-  rect(30, 550, 460, 200, 30); // Links
-  text('Waar', 150, 670); // tekst waar (links)
-  rect(510, 550, 460, 200, 30); // Rechts
-  text('Niet waar', 570, 670); // tekst niet waar (rechts)
-}
-
-function janee() {
-  rect(40, 40, 910, 150, 30); // Balk voor de vraag
-  textStyle(BOLD)
-  textSize(80)
-  rect(30, 550, 460, 200, 30); // Links
-  text('Ja', 200, 670); // tekst ja (links)
-  rect(510, 550, 460, 200, 30); // Rechts
-  text('Nee', 670, 670); // tekst nee (rechts)
-}
-
-function janeefoto() {
-  rect(40, 40, 910, 150, 30); // Balk voor de vraag
-  textStyle(BOLD)
-  textSize(80)
-  rect(30, 550, 460, 200, 30); // Links
-  text('Ja', 200, 670); // tekst ja (links)
-  rect(510, 550, 460, 200, 30); // Rechts
-  text('Nee', 670, 670); // tekst nee (rechts)
-}
-
-function fotoVraag1() {
-  let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
-  rect(40, 40, 910, 150, 30); // Balk voor de vraag
-  rect(350, 200, 300, 300); // plek foto midden
-
-  // Vlakken voor keuze
-  rect(30, 550, 460, 100, 30); // Links boven
-  rect(30, 670, 460, 100, 30); // Links onder
-  rect(510, 550, 460, 100, 30); // Rechts boven
-  rect(510, 670, 460, 100, 30); // Rechts onder
-
-  // Antwoorden laten zien
-  textSize(40);
-  text(vraag.Antwoorden[0], 195, 610); // Links boven
-  text(vraag.Antwoorden[1], 135, 730); // Links onder
-  text(vraag.Antwoorden[2], 630, 610); // Rechts boven
-  text(vraag.Antwoorden[3], 650, 730); // Rechts onder
+function Verder() {
+  fill(VraagVlak); // Zorgen dat het vlak met de tekst de juiste kleur krijgt
+  rect(40, 40, 910, 150, 30); // Balk voor aanwijzing
+  fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
+  textSize(50);
+  text('Klik op het blok om verder te gaan.', 80, 130);
+  fill(VraagVlak); // Zorgen dat het vlak met de tekst de juiste kleur krijgt
+  rect(290, 250, 400, 200, 30); // Balk voor tekst VERDER
+  fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
+  textSize(70);
+  text('Verder', 380, 370);
 }
 
 function fotoVraag3() {
   textSize(25);
-  rect(40, 40, 910, 150, 30); // Balk voor de vraag
   // Vlakken voor foto's
+  fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
   rect(30, 200, 300, 300); // plek foto links  
   text('Afbeelding 1', 100, 530); // tekst afbeelding 1
   rect(350, 200, 300, 300); // plek foto midden
   text('Afbeelding 2', 425, 530); // tekst afbeelding 2
   rect(670, 200, 300, 300); // plek foto rechts
   text('Afbeelding 3', 750, 530); // tekst afbeelding 3
-
-  // Vlakken voor de keuze
-  rect(30, 550, 460, 100, 30); // Links boven
-  rect(30, 670, 460, 100, 30); // Links onder
-  rect(510, 550, 460, 100, 30); // Rechts boven
-  rect(510, 670, 460, 100, 30); // Rechts onder
-
-  // Antwoord mogelijkheden
-  textSize(40);
-  text('Afbeelding 1', 135, 610); // Links boven
-  text('Afbeelding 2', 135, 730); // Links onder
-  text('Afbeelding 3', 630, 610); // Rechts boven
-  text('Geen van alle', 620, 730); // Rechts onder
 }
 
 function mousePressed() {
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
-  
-  if (vraag.vraagtype == 'meerkeuze' || vraag.vraagtype == 'fotovraag1' || vraag.vraagtype == 'fotovraag3') { // Zorgen dat het alleen werkt bij meerkeuze en foto vragen
-    if (mouseX > 30 && mouseX < 30 + 460 &&
-      mouseY > 550 && mouseY < 550 + 100) { // Links boven
+  if (VraagBeantwoord == 1) {
+    if (mouseX > 290 && mouseX < 290 + 400 &&
+      mouseY > 250 && mouseY < 250 + 200) {
+      VraagBeantwoord = 0; // Zorgen dat het systeem naar de volgende vraag kan
+      ActieveVraag = ActieveVraag += 1; // Zorgen dat het naar de volgende vraag gaat
+      PogingAantal = 0 // Pogingen resetten
 
-    }
-    else if (mouseX > 30 && mouseX < 30 + 460 &&
-      mouseY > 670 && mouseY < 670 + 100) { // Links onder
-
-    }
-    else if (mouseX > 510 && mouseX < 510 + 460 &&
-      mouseY > 550 && mouseY < 550 + 100) { // Rechts boven
-
-    }
-    else if (mouseX > 510 && mouseX < 510 + 460 &&
-      mouseY > 670 && mouseY < 670 + 100) { // Rechts onder
-
+      antwoordKnop1.style('background-color', '#F5F5F5');
+      antwoordKnop2.style('background-color', '#F5F5F5');
+      antwoordKnop3.style('background-color', '#F5F5F5');
+      antwoordKnop4.style('background-color', '#F5F5F5');
     }
   }
 
-  if (vraag.vraagtype == 'janee' || vraag.vraagtype == 'janeefoto' || vraag.vraagtype == 'trueorfalse') { // Zorgen dat het alleen werkt bij vragen met 2 antwoorden
-    if (mouseX > 30 && mouseX < 30 + 460 &&
-      mouseY > 550 && mouseY < 550 + 200) { // vak links
-      if (Vragen.JuisteAntwoord == 0) {
-        VraagJuist0 = 'green';
-        VraagJuist1 = 'red';
-      }
-
-      else {
-        VraagJuist0 = 'red';
-        VraagJuist1 = 'green';
-      }
-    }
-    else if (mouseX > 510 && mouseX < 510 + 460 &&
-      mouseY > 550 && mouseY < 550 + 200) { // vak rechts
-
-    }
-  }
 }

@@ -25,6 +25,8 @@ function setup() {
   for (let index = 0; index < LoopKleurCircle; index++) {
     KleurCircle.push([random(0, 255), random(0, 255), random(0, 255)])
   }
+
+  frameRate(240)
 }
 
 function draw() {
