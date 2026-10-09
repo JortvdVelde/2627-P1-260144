@@ -151,6 +151,9 @@ let Vragen = [ // Vragen van de quiz
     TypeVraag: "trueorfalse"
   }];
 
+  let BeginschermS = true;
+  let EindschermS = false;
+
 // Kleuren quiz
 let VraagVlak = 'white'; // Vraag vlak boven
 let TekstKleur = 'black'; // Kleur van de teksten
@@ -176,6 +179,9 @@ let antwoordKnop1;
 let antwoordKnop2;
 let antwoordKnop3;
 let antwoordKnop4;
+
+let Restart;
+let Start;
 
 
 function preload() {
@@ -221,9 +227,23 @@ function setup() {
   antwoordKnop4.size(460, 100);
   antwoordKnop4.mousePressed(antwoord4Gedrukt);
   antwoordKnop4.style('font-size', '32px');
+
+  Restart = createButton('Klik hier om de quiz opnieuw te spelen.')
+  Restart.position(270, 400);
+  Restart.size(460, 100);
+  Restart.mousePressed(RestartQuiz);
+  Restart.style('font-size', '32px');
+  Restart.hide()
+
+  Start = createButton('Klik hier om de quiz te starten.')
+  Start.position(270, 400);
+  Start.size(460, 100);
+  Start.mousePressed(StartQuiz);
+  Start.style('font-size', '32px');
+  Start.hide()
 }
 
-function antwoord1Gedrukt() {
+function antwoord1Gedrukt() { // Links boven
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
   if (vraag.JuisteAntwoord == 0) {
     antwoordKnop1.style('background-color', '#39B827');
@@ -232,7 +252,16 @@ function antwoord1Gedrukt() {
     antwoordKnop4.style('background-color', '#FF2C00');
     VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
     if (PogingAantal == 0) {
-      Score = Score += 1;
+      PogingAantal = PogingAantal = 1
+      if (ActieveVraag == 24) {
+        ActieveVraag = 0;
+        EindschermS = true;
+        Score = Score += 1;
+      }
+
+      else {
+        Score = Score += 1;
+      }
     }
   }
 
@@ -242,7 +271,7 @@ function antwoord1Gedrukt() {
   }
 }
 
-function antwoord2Gedrukt() {
+function antwoord2Gedrukt() { // Links onder
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
   if (vraag.JuisteAntwoord == 1) {
     antwoordKnop1.style('background-color', '#FF2C00');
@@ -251,7 +280,16 @@ function antwoord2Gedrukt() {
     antwoordKnop4.style('background-color', '#FF2C00');
     VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
     if (PogingAantal == 0) {
-      Score = Score += 1;
+      PogingAantal = PogingAantal = 1
+      if (ActieveVraag == 23) {
+        ActieveVraag = 0;
+        EindschermS = true;
+        Score = Score += 1;
+      }
+
+      else {
+        Score = Score += 1;
+      }
     }
   }
 
@@ -261,7 +299,7 @@ function antwoord2Gedrukt() {
   }
 }
 
-function antwoord3Gedrukt() {
+function antwoord3Gedrukt() { // Rechts boven
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
   if (vraag.JuisteAntwoord == 2) {
     antwoordKnop1.style('background-color', '#FF2C00');
@@ -270,7 +308,16 @@ function antwoord3Gedrukt() {
     antwoordKnop4.style('background-color', '#FF2C00');
     VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
     if (PogingAantal == 0) {
-      Score = Score += 1;
+      PogingAantal = PogingAantal = 1
+      if (ActieveVraag == 23) {
+        ActieveVraag = 0;
+        EindschermS = true;
+        Score = Score += 1;
+      }
+
+      else {
+        Score = Score += 1;
+      }
     }
   }
 
@@ -280,7 +327,7 @@ function antwoord3Gedrukt() {
   }
 }
 
-function antwoord4Gedrukt() {
+function antwoord4Gedrukt() { // Rechts onder
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
   if (vraag.JuisteAntwoord == 3) {
     antwoordKnop1.style('background-color', '#FF2C00');
@@ -289,7 +336,16 @@ function antwoord4Gedrukt() {
     antwoordKnop4.style('background-color', '#39B827');
     VraagBeantwoord = 1; // Zetten dat de vraag beantwoord is
     if (PogingAantal == 0) {
-      Score = Score += 1;
+      PogingAantal = PogingAantal = 1
+      if (ActieveVraag == 23) {
+        ActieveVraag = 0;
+        EindschermS = true;
+        Score = Score += 1;
+      }
+
+      else {
+        Score = Score += 1;
+      }
     }
   }
 
@@ -299,75 +355,97 @@ function antwoord4Gedrukt() {
   }
 }
 
+function RestartQuiz() { // Button om quiz te herstarten vanaf begin.
+  EindschermS = false;
+  BeginschermS = true;
+  Restart.hide();
+}
+
+function StartQuiz() { // Button om quiz te starten
+  BeginschermS = false;
+  Start.hide()
+
+  // Butons zichtbaar maken
+    antwoordKnop1.show()
+    antwoordKnop2.show()
+    antwoordKnop3.show()
+    antwoordKnop4.show()
+}
+
 function draw() {
   background(220);
   textWrap(WORD); // Zorgen dat teksten niet groter worden dan bepaald gegeven
   let vraag = Vragen[ActieveVraag]; // Zorgen dat je vraag kan gebruiken als afkorting
 
-  if (vraag.TypeVraag == 'fotoVraag3') { // Fotovraag met 3 plaatjes in de vraagtype omzetten naar een layout
-    fotoVraag3() // Inladen template
+  if (EindschermS == true) {
+    eindscherm()
+    Restart.show()
+  }
+  if (BeginschermS == true) {
+    beginscherm()
+    Start.show()
   }
 
-  if (vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse') {
+  if (vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse' && BeginschermS == false && EindschermS == false) {
     antwoordKnop3.hide()
     antwoordKnop4.hide()
   }
-  else if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'fotovraag1' || vraag.TypeVraag == 'fotovraag3') {
+  else if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'fotovraag1' || vraag.TypeVraag == 'fotovraag3' && BeginschermS == false && EindschermS == false) {
     antwoordKnop3.show()
     antwoordKnop4.show()
   }
 
-  if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse') { // Zorgen voor opvulfoto
+  if (vraag.TypeVraag == 'meerkeuze' || vraag.TypeVraag == 'janee' || vraag.TypeVraag == 'trueorfalse' && BeginschermS == false && EindschermS == false) { // Zorgen voor opvulfoto
     image(Quiz, 290, 250, 400, 200) // Quiz foto
   }
 
-  if (ActieveVraag == 25) {
-    eindscherm()
-    antwoordKnop1.hide()
-    antwoordKnop2.hide()
-    antwoordKnop3.hide()
-    antwoordKnop4.hide()
-  }
-
-
   // Buttons antwoorden geven
-  antwoordKnop1.html(vraag.Antwoorden[0]);
-  antwoordKnop2.html(vraag.Antwoorden[1]);
-  antwoordKnop3.html(vraag.Antwoorden[2]);
-  antwoordKnop4.html(vraag.Antwoorden[3]);
+  antwoordKnop1.html(vraag.Antwoorden[0]); // Links boven
+  antwoordKnop2.html(vraag.Antwoorden[1]); // Links onder
+  antwoordKnop3.html(vraag.Antwoorden[2]); // Rechts boven
+  antwoordKnop4.html(vraag.Antwoorden[3]); // Rechts onder
 
   // Foto's plaatsen juiste plekken
-  if (ActieveVraag == 0) { // Vraag 1 (Kamerplant)
+  if (ActieveVraag == 0 && BeginschermS == false && EindschermS == false) { // Vraag 1 (Kamerplant)
+    // Zorgen voor de woorden onder de plaatjes
+    textSize(25);
+    fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
+    rect(30, 200, 300, 300); // plek foto links  
+    text('Afbeelding 1', 100, 530); // tekst afbeelding 1
+    rect(350, 200, 300, 300); // plek foto midden
+    text('Afbeelding 2', 425, 530); // tekst afbeelding 2
+    rect(670, 200, 300, 300); // plek foto rechts
+    text('Afbeelding 3', 750, 530); // tekst afbeelding 3
+
     image(KamerplantJungle, 30, 200, 300, 300); // foto jungle links
     image(Kamerplant, 350, 200, 300, 300); // foto kamerplant midden
     image(KamerplantDick, 670, 200, 300, 300); // foto dick schoof rechts
   }
-  else if (ActieveVraag == 1) { // Vraag 2 (Wereldkaart)
+  else if (ActieveVraag == 1 && BeginschermS == false && EindschermS == false) { // Vraag 2 (Wereldkaart)
     rect(200, 200, 600, 300); // rand foto
     image(Wereldkaart, 200, 200, 600, 300); // foto wereldkaart
     image(Pinguins, 520, 390, 70, 40); // foto pinguins
   }
-  else if (ActieveVraag == 2) { // Vraag 3 (Verkeersbord)
+  else if (ActieveVraag == 2 && BeginschermS == false && EindschermS == false) { // Vraag 3 (Verkeersbord)
     image(Verkeersbord, 350, 200, 300, 300)
   }
 
   // Zorgen voor vlak voor vraag en tekst
-  if (VraagBeantwoord == 0) {
+  if (VraagBeantwoord == 0 && BeginschermS == false && EindschermS == false) {
     fill(VraagVlak); // Zorgen dat het vlak met de vraag de juiste kleur krijgt
     rect(40, 40, 910, 150, 30); // Balk voor de vraag
-    
-// Vraag
-fill('black')
-  textSize(30) // Grootte van de tekst 
-  textStyle(BOLD);
-  text(vraag.Vraag, 60, 80, 920) // zorgen dat de vragen op het scherm komen
+
+    // Vraag
+    fill('black')
+    textSize(30) // Grootte van de tekst 
+    textStyle(BOLD);
+    text(vraag.Vraag, 60, 80, 920) // zorgen dat de vragen op het scherm komen
   }
-  
+
   // Zorgen dat je op verder kan klikken als vraag beantwoord is
-  else if (VraagBeantwoord == 1) {
+  else if (VraagBeantwoord == 1 && BeginschermS == false && EindschermS == false) {
     Verder()
   }
-  
 
   console.log('Pogingen: ' + PogingAantal + ' Score: ' + Score);
 }
@@ -380,18 +458,30 @@ function beginscherm() {
   fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
   text('Welkom bij de quiz!', 160, 130);
   textSize(50);
-  text('Klik op het scherm om te beginnen.', 90, 230);
+  text('Klik op de button om te beginnen.', 90, 230);
+
+  // Butons verbergen
+  antwoordKnop1.hide()
+  antwoordKnop2.hide()
+  antwoordKnop3.hide()
+  antwoordKnop4.hide()
 }
 
 function eindscherm() {
   fill(VraagVlak);
   rect(40, 40, 910, 270, 30); // Balk voor bericht
   textStyle(BOLD);
-  textSize(70);
+  textSize(50);
   fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
   text('Je hebt de quiz uitgespeeld!', 160, 130);
-  textSize(50);
-  text('De behaalde score = ' + Score, 90, 230);
+  textSize(30);
+  text('De behaalde score = ' + Score, 330, 230);
+
+  // Buttons verbergen
+  antwoordKnop1.hide()
+  antwoordKnop2.hide()
+  antwoordKnop3.hide()
+  antwoordKnop4.hide()
 }
 
 function Verder() {
@@ -405,18 +495,6 @@ function Verder() {
   fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
   textSize(70);
   text('Verder', 380, 370);
-}
-
-function fotoVraag3() {
-  textSize(25);
-  // Vlakken voor foto's
-  fill(TekstKleur); // Zorgen dat de teksten de juiste kleur krijgen
-  rect(30, 200, 300, 300); // plek foto links  
-  text('Afbeelding 1', 100, 530); // tekst afbeelding 1
-  rect(350, 200, 300, 300); // plek foto midden
-  text('Afbeelding 2', 425, 530); // tekst afbeelding 2
-  rect(670, 200, 300, 300); // plek foto rechts
-  text('Afbeelding 3', 750, 530); // tekst afbeelding 3
 }
 
 function mousePressed() {
