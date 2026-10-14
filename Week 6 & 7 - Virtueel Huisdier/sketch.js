@@ -5,26 +5,23 @@ let MarioY = 510 // Y positie van mario
 // Kleuren spel
 let MarioKleur = [ // Kleuren van mario
   '#FE0100', // Petje en shirt
-  '#5F1D00', // Schoenen en haar
+  '#5F1D00', // haar
   '#FFD6C0', // Lichaamskleur
   'black', // Snor en ogen
   '#1A2CFF', // Overal
-  '#FFF934' // Knopen overal
+  '#FFF934', // Knopen overal
+  '#783C00' // Schoenen
 ];
 let MarioKleurVies = '#A65B41'; // Kleur plekken die vies zijn
 
-let MarioHongerKleur = 'green'; // Kleur geven aan circle statistiek honger
-let MarioBlijKleur = 'green'; // Kleur geven aan circle statistiek blijheid
-let MarioHygieneKleur = 'green'; // Kleur geven aan circle statistiek hygiene
-let MarioEnergieKleur = 'green'; // Kleur geven aan circle statistiek energie
-let MarioGezondheidKleur = 'green'; // Kleur geven aan circle statistiek gezondheid
-
+let MarioStatsKleur = ['green', 'green', 'green', 'green', 'green']; // Kleur geven circle statistieken
+                    // Honger - Blij - Hygiene - Energie - Gezondheid
 // Gevoelens uiterlijk
-let MarioHonger = 100;
-let MarioBlij = 100;
-let MarioHygiene = 100;
-let MarioEnergie = 100;
-let MarioGezondheid = 100;
+let MarioHonger = 0;
+let MarioBlij = 0;
+let MarioHygiene = 0;
+let MarioEnergie = 0;
+let MarioGezondheid = 0;
 
 // Inladen foto's
 let Achtergrond; // foto van achtergrond
@@ -35,6 +32,8 @@ let PlankStats; // Foto van getekende plank
 
 let HongerIcon; // icon inladen voor honger
 let BlijIcon; // Icon inladen voor blijheid
+let BlijIconNeutraal; // Icon inladen voor blijheid neutraal face
+let BlijIconSad; // icon inladen voor blijheid verdrietig face
 let HygieneIcon; // icon inladen voor hygiene
 let EnergieIcon; // icon inladen voor energie
 let GezondheidIcon; // icon inladen voor gezondheid
@@ -51,16 +50,19 @@ function preload() { // Inladen afbeeldingen
   Hamburger = loadImage('Praat wolk met hamburger.png'); // Inladen praat wolk met hamburger
   HamburgerRood = loadImage('Praat wolk rood met hamburger.png'); // inladen rode praat wolk met hamburger
   PlankStats = loadImage('plank stats circkels.png'); // Inladen plank voor de circkels met stats
+  EnergieWolk = loadImage('Praat wolk met energie V2.png'); // inladen praat wolk met energie
+  EnergieWolkRood = loadImage('Praat wolk rood met energie V2.png'); // inladen praat wolk rood met energie
 
   // Icons stats
   HongerIcon = loadImage('honger.png'); // inladen icon honger
   BlijIcon = loadImage('smiley.png'); // inladen smiley (icon blij)
+  BlijIconNeutraal = loadImage('Smiley neutraal.png'); // inladen smiley neutraal (icon blij)
+  BlijIconSad = loadImage('SmileySad.png'); // inladen smiley sad (icon blij)
   HygieneIcon = loadImage('hygiene.png'); // inladen hygiene icon
-  EnergieIcon = loadImage('energie.png'); // inladen energie icon
+  EnergieIcon = loadImage('Bliksem.png'); // inladen energie icon
   GezondheidIcon = loadImage('gezondheid.png'); // inladen gezondheid icon
 
-  EnergieWolk = loadImage('Praat wolk met energie.png'); // inladen praat wolk met energie
-  EnergieWolkRood = loadImage('Praat wolk rood met energie.png'); // inladen praat wolk rood met energie
+
 }
 
 function setup() {
@@ -79,33 +81,43 @@ function draw() {
 
   Statistieken();
   bewegenWereld();
-
-
 }
 
 function Statistieken() {
   image(PlankStats, 95, -20, 600, 175);
 
   strokeWeight(1);
-  fill(MarioHongerKleur); // Kleur mario wanneer mario honger heeft
-  circle(210, 63, 70);
+  fill(MarioStatsKleur[0]); // Kleur mario wanneer mario honger heeft
+  circle(210, 63, 70); // Circle van statistieken
   image(HongerIcon, 180, 33, 60, 60); // Toevoegen van icon
-  
-  fill(MarioBlijKleur); // Kleur mario voor blijheid
-  circle(300, 62, 70);
-  image(BlijIcon, 260, 32, 80, 60)
 
-  fill(MarioHygieneKleur); // Kleur mario zijn hygiene
-  circle(390, 61, 70);
+  fill(MarioStatsKleur[1]); // Kleur mario voor blijheid
+  circle(300, 62, 70); // Circle van statistieken
+
+  if (MarioBlij > 51) { // Als het 51 of erboven is
+    image(BlijIcon, 260, 32, 80, 60);
+    MarioStatsKleur[1] = 'green'; // Groene kleur geven aan circle
+  }
+  else if (MarioBlij <= 50 && MarioBlij > 21) { // Als hij tussen de 50 en 21 is
+    image(BlijIconNeutraal, 270, 32, 60, 60);
+    MarioStatsKleur[1] = 'orange'; // Oranje kleur geven aan circle
+  }
+  else if (MarioBlij <= 20) { // Als hij 20 is of er onder
+    image(BlijIconSad, 270, 32, 60, 60);
+    MarioStatsKleur[1] = 'red'; // Rode kleur geven aan circle
+  }
+
+  fill(MarioStatsKleur[2]); // Kleur mario zijn hygiene
+  circle(390, 61, 70); // Circle van statistieken
   image(HygieneIcon, 360, 31, 60, 70)
-  
-  fill(MarioEnergieKleur); // Kleur voor mario zijn energie level
-  circle(480, 61, 70);
+
+  fill(MarioStatsKleur[3]); // Kleur voor mario zijn energie level
+  circle(480, 61, 70); // Circle van statistieken
   image(EnergieIcon, 450, 31, 60, 60)
-  
-  
-  fill(MarioGezondheidKleur); // Kleur mario zijn gezondheid
-  circle(570, 61, 70);
+
+
+  fill(MarioStatsKleur[4]); // Kleur mario zijn gezondheid
+  circle(570, 61, 70); // Circle van statistieken
   image(GezondheidIcon, 540, 31, 60, 60)
 
 
@@ -171,37 +183,37 @@ function Mario() { // Pixelart Mario
   rect(MarioX, MarioY + 60, 80, 10);
 
   // Rij 8
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX - 10, MarioY + 70, 20, 10);
   fill(MarioKleur[4]);
   rect(MarioX + 10, MarioY + 70, 10, 10);
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX + 20, MarioY + 70, 40, 10);
 
   // Rij 9
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX - 20, MarioY + 80, 30, 10);
   fill(MarioKleur[4]);
   rect(MarioX + 10, MarioY + 80, 10, 10);
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX + 20, MarioY + 80, 20, 10);
   fill(MarioKleur[4]);
   rect(MarioX + 40, MarioY + 80, 10, 10);
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX + 50, MarioY + 80, 30, 10);
 
   // Rij 10
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX - 30, MarioY + 90, 40, 10);
   fill(MarioKleur[4]);
   rect(MarioX + 10, MarioY + 90, 40, 10);
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX + 50, MarioY + 90, 40, 10);
 
   // Rij 11
   fill(MarioKleur[2]);
   rect(MarioX - 30, MarioY + 100, 20, 10);
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX - 10, MarioY + 100, 10, 10);
   fill(MarioKleur[4]);
   rect(MarioX, MarioY + 100, 10, 10);
@@ -213,7 +225,7 @@ function Mario() { // Pixelart Mario
   rect(MarioX + 40, MarioY + 100, 10, 10);
   fill(MarioKleur[4]);
   rect(MarioX + 50, MarioY + 100, 10, 10);
-  fill('#FE0100');
+  fill(MarioKleur[0]);
   rect(MarioX + 60, MarioY + 100, 10, 10);
   fill(MarioKleur[2]);
   rect(MarioX + 70, MarioY + 100, 20, 10);
@@ -241,15 +253,15 @@ function Mario() { // Pixelart Mario
   rect(MarioX + 50, MarioY + 130, 30, 10);
 
   // Rij 15
-  fill('#783C00');
+  fill(MarioKleur[6]);
   rect(MarioX - 20, MarioY + 140, 30, 10);
-  fill('#783C00');
+  fill(MarioKleur[6]);
   rect(MarioX + 50, MarioY + 140, 30, 10);
 
   // Rij 16
-  fill('#783C00');
+  fill(MarioKleur[6]);
   rect(MarioX - 30, MarioY + 150, 40, 10);
-  fill('#783C00');
+  fill(MarioKleur[6]);
   rect(MarioX + 50, MarioY + 150, 40, 10);
 }
 
@@ -276,16 +288,19 @@ function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
 function honger() { // Zorgen dat honger iets doet met de mario
   if (MarioHonger >= 51) { // Geen honger
     MarioSnelheid = 5; // Snelheid Mario
+    MarioStatsKleur[0] = 'green'; // Kleur groen geven aan stats
   }
 
   else if (MarioHonger <= 50 && MarioHonger >= 21) { // Meer honger
     image(Hamburger, MarioX + 60, MarioY - 100, 200, 200);
     MarioSnelheid = 2; // Snelheid Mario
+    MarioStatsKleur[0] = 'orange'; // Kleur oranje geven aan stats
   }
 
   else if (MarioHonger <= 20) { // Heel veel honger
     image(HamburgerRood, MarioX + 60, MarioY - 100, 200, 200);
     MarioSnelheid = 1; // Snelheid Mario
+    MarioStatsKleur[0] = 'red'; // Kleur red geven aan stats
   }
 }
 
@@ -306,10 +321,12 @@ function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doe
 function Hygiene() { // Zorgen dat hygiene iets doet bij mario
   if (MarioHygiene >= 51) { // Schoon
     MarioSnelheid = 5; // Snelheid Mario
+    MarioStatsKleur[2] = 'green'; // Kleur groen geven aan stats
   }
 
   else if (MarioHygiene <= 50 && MarioHygiene >= 21) { // Beetje schoon
     MarioSnelheid = 2; // Snelheid Mario
+    MarioStatsKleur[2] = 'orange'; // Kleur oranje geven aan stats
 
     fill(MarioKleurVies);
     rect(MarioX + 30, MarioY + 10, 10, 20);
@@ -324,6 +341,7 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
 
   else if (MarioHygiene <= 20) { // Niet schoon
     MarioSnelheid = 1; // Snelheid Mario
+    MarioStatsKleur[2] = 'red'; // Kleur rood geven aan stats
 
     fill(MarioKleurVies);
     rect(MarioX + 30, MarioY + 10, 10, 20);
@@ -350,17 +368,20 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
 }
 
 function Energie() { // Zorgen dat weinig energie iets doet bij mario
-  if (MarioHonger >= 51) { // Veel energie
+  if (MarioEnergie >= 51) { // Veel energie
     MarioSnelheid = 5; // Snelheid Mario
+    MarioStatsKleur[3] = 'green'; // Kleur groen geven aan stats
   }
 
-  else if (MarioHonger <= 50 && MarioHonger >= 21) { // Minder energie
+  else if (MarioEnergie <= 50 && MarioEnergie >= 21) { // Minder energie
     MarioSnelheid = 2; // Snelheid Mario
+    MarioStatsKleur[3] = 'orange'; // Kleur oranje geven aan stats
     image(EnergieWolk, MarioX + 60, MarioY - 100, 200, 200);
   }
 
-  else if (MarioHonger <= 20) { // Weinig energie
+  else if (MarioEnergie <= 20) { // Weinig energie
     MarioSnelheid = 1; // Snelheid Mario
+    MarioStatsKleur[3] = 'red'; // Kleur rood geven aan stats
     image(EnergieWolkRood, MarioX + 60, MarioY - 100, 200, 200);
   }
 }
@@ -368,12 +389,14 @@ function Energie() { // Zorgen dat weinig energie iets doet bij mario
 function gezondheid() { // Gevoelens (gezondheid)
   if (MarioGezondheid >= 51) { // Als mario gezond is
     MarioKleur[2] = '#FFD6C0'; // Lichaamskleur
+    MarioStatsKleur[4] = 'green'; // Kleur groen geven aan stats
 
     MarioSnelheid = 5; // Mario zijn snelheid
   }
 
   else if (MarioGezondheid <= 50 && MarioGezondheid >= 21) {
     MarioKleur[2] = '#96FFA9'; // Lichaamskleur
+    MarioStatsKleur[4] = 'orange'; // Kleur oranje geven aan stats
 
     MarioSnelheid = 2; // Snelheid verlagen mario
     image(Thermometer, MarioX + 77, MarioY - 30, 100, 100);
@@ -384,6 +407,7 @@ function gezondheid() { // Gevoelens (gezondheid)
 
   else if (MarioGezondheid <= 20) {
     MarioKleur[2] = '#59FF78'; // Lichaamskleur
+    MarioStatsKleur[4] = 'red'; // Kleur rood geven aan stats
 
     MarioSnelheid = 1;
     image(Thermometer, MarioX + 77, MarioY - 30, 100, 100);
