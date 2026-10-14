@@ -2,6 +2,9 @@
 let MarioX = 400 // X positie van mario
 let MarioY = 510 // Y positie van mario
 
+let MarioValSnelheid = 0; // Zorgen hoe hardt mario valt tijdens springen
+let MarioSpringBlock = 0; // Zorgen dat je niet kan dubbel jumpen
+
 // Kleuren spel
 let MarioKleur = [ // Kleuren van mario
   '#FE0100', // Petje en shirt
@@ -15,13 +18,14 @@ let MarioKleur = [ // Kleuren van mario
 let MarioKleurVies = '#A65B41'; // Kleur plekken die vies zijn
 
 let MarioStatsKleur = ['green', 'green', 'green', 'green', 'green']; // Kleur geven circle statistieken
-                    // Honger - Blij - Hygiene - Energie - Gezondheid
+// Honger - Blij - Hygiene - Energie - Gezondheid
+
 // Gevoelens uiterlijk
-let MarioHonger = 0;
-let MarioBlij = 0;
-let MarioHygiene = 0;
-let MarioEnergie = 0;
-let MarioGezondheid = 0;
+let MarioHonger = 100;
+let MarioBlij = 100;
+let MarioHygiene = 100;
+let MarioEnergie = 100;
+let MarioGezondheid = 100;
 
 // Inladen foto's
 let Achtergrond; // foto van achtergrond
@@ -61,8 +65,6 @@ function preload() { // Inladen afbeeldingen
   HygieneIcon = loadImage('hygiene.png'); // inladen hygiene icon
   EnergieIcon = loadImage('Bliksem.png'); // inladen energie icon
   GezondheidIcon = loadImage('gezondheid.png'); // inladen gezondheid icon
-
-
 }
 
 function setup() {
@@ -71,22 +73,22 @@ function setup() {
 
 function draw() {
   background(Achtergrond); // Inladen foto achtergrond als achtergrond
-  Mario();
+  Mario(); // Pixelart
 
-  honger();
-  Blijheid();
-  Hygiene();
-  Energie();
-  gezondheid();
+  honger(); // Honger bijhouden
+  Blijheid(); // Blijheid bijhouden
+  Hygiene(); // Hygiene bijhouden
+  Energie(); // Energie bijhouden
+  gezondheid(); // Gezondheid bijhouden
 
-  Statistieken();
-  bewegenWereld();
+  Statistieken(); // Statistieken laten zien
+  bewegenWereld(); // Zorgen dat de karakter kan bewegen
 }
 
 function Statistieken() {
   image(PlankStats, 95, -20, 600, 175);
 
-  strokeWeight(1);
+  strokeWeight(4);
   fill(MarioStatsKleur[0]); // Kleur mario wanneer mario honger heeft
   circle(210, 63, 70); // Circle van statistieken
   image(HongerIcon, 180, 33, 60, 60); // Toevoegen van icon
@@ -267,12 +269,12 @@ function Mario() { // Pixelart Mario
 
 function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
   // Blokkeren dat mario de map uit kan
-  if (MarioX >= 700) { // Zorgen dat hij niet verder dan 700 gaat
-    MarioX = 700;
+  if (MarioX >= 830) { // Zorgen dat hij niet verder dan 700 gaat
+    MarioX = -100;
   }
 
-  if (MarioX <= 30) { // Zorgen dat hij niet lager dan 30 gaat
-    MarioX = 30;
+  if (MarioX <= -101) { // Zorgen dat hij niet lager dan 30 gaat
+    MarioX = 830;
   }
 
   // Zorgen voor beweging door de WASD of de pijltjes
@@ -283,6 +285,16 @@ function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
   if (keyIsDown(65) || keyIsDown(37)) { // A of <
     MarioX = MarioX - MarioSnelheid;
   }
+
+  // Zorgen dat mario kan springen
+  MarioY = MarioY += MarioValSnelheid * deltaTime * 0.001;
+  MarioValSnelheid = MarioValSnelheid + 20;
+
+  if (MarioValSnelheid > 0 && MarioY > 510) { // Zorgen dat hij stopt met vallen
+    MarioY = 510;
+    MarioValSnelheid = 0;
+    MarioSpringBlock = 0; // Resetten dat je weer kan springen
+  }
 }
 
 function honger() { // Zorgen dat honger iets doet met de mario
@@ -292,13 +304,13 @@ function honger() { // Zorgen dat honger iets doet met de mario
   }
 
   else if (MarioHonger <= 50 && MarioHonger >= 21) { // Meer honger
-    image(Hamburger, MarioX + 60, MarioY - 100, 200, 200);
+    image(Hamburger, MarioX - 40, MarioY - 130, 200, 200);
     MarioSnelheid = 2; // Snelheid Mario
     MarioStatsKleur[0] = 'orange'; // Kleur oranje geven aan stats
   }
 
   else if (MarioHonger <= 20) { // Heel veel honger
-    image(HamburgerRood, MarioX + 60, MarioY - 100, 200, 200);
+    image(HamburgerRood, MarioX - 40, MarioY - 130, 200, 200);
     MarioSnelheid = 1; // Snelheid Mario
     MarioStatsKleur[0] = 'red'; // Kleur red geven aan stats
   }
@@ -311,10 +323,17 @@ function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doe
 
   else if (MarioBlij <= 50 && MarioBlij >= 21) { // Normaal blij
     MarioSnelheid = 2; // Snelheid Mario
+    fill('#3D92BA');
+    rect(MarioX + 50, MarioY + 30, 10, 10);
   }
 
   else if (MarioBlij <= 20) { // Niet blij
     MarioSnelheid = 1; // Snelheid Mario
+
+    fill('#3D92BA');
+    rect(MarioX + 50, MarioY + 30, 10, 20);
+    rect(MarioX + 60, MarioY + 40, 10, 10);
+    rect(MarioX + 40, MarioY + 40, 10, 20);
   }
 }
 
@@ -376,13 +395,13 @@ function Energie() { // Zorgen dat weinig energie iets doet bij mario
   else if (MarioEnergie <= 50 && MarioEnergie >= 21) { // Minder energie
     MarioSnelheid = 2; // Snelheid Mario
     MarioStatsKleur[3] = 'orange'; // Kleur oranje geven aan stats
-    image(EnergieWolk, MarioX + 60, MarioY - 100, 200, 200);
+    image(EnergieWolk, MarioX + 60, MarioY - 130, 200, 200);
   }
 
   else if (MarioEnergie <= 20) { // Weinig energie
     MarioSnelheid = 1; // Snelheid Mario
     MarioStatsKleur[3] = 'red'; // Kleur rood geven aan stats
-    image(EnergieWolkRood, MarioX + 60, MarioY - 100, 200, 200);
+    image(EnergieWolkRood, MarioX + 60, MarioY - 130, 200, 200);
   }
 }
 
@@ -414,5 +433,13 @@ function gezondheid() { // Gevoelens (gezondheid)
 
     fill('red'); // Zorgen dat circle kleur krijgt
     circle(MarioX + 155, MarioY - 10, 30); // Circkel eind thermometer
+  }
+}
+
+function keyPressed(){
+  // Zorgen voor springen
+  if (keyCode === 32 && MarioSpringBlock == 0 || keyCode === 38 && MarioSpringBlock == 0) {
+    MarioValSnelheid -= 800;
+    MarioSpringBlock = 1; // Uitzetten dat je kan dubbeljumpen
   }
 }
