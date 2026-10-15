@@ -25,7 +25,11 @@ let MarioHonger = 100;
 let MarioBlij = 100;
 let MarioHygiene = 100;
 let MarioEnergie = 100;
-let MarioGezondheid = 100;
+let MarioGezondheid = 0;
+
+// Statistieken
+let PositieX = 120;
+let PositieY = 120;
 
 // Inladen foto's
 let Achtergrond; // foto van achtergrond
@@ -45,6 +49,11 @@ let GezondheidIcon; // icon inladen voor gezondheid
 let EnergieWolk; // Foto praat wolk energie
 let EnergieWolkRood; // Foto praat wolk energie rood
 
+let Grave; // foto graafsteen als mario dood is
+
+let Datum;
+let str;
+
 // Rond bewegen door de wereld
 let MarioSnelheid = 5;
 
@@ -56,6 +65,7 @@ function preload() { // Inladen afbeeldingen
   PlankStats = loadImage('plank stats circkels.png'); // Inladen plank voor de circkels met stats
   EnergieWolk = loadImage('Praat wolk met energie V2.png'); // inladen praat wolk met energie
   EnergieWolkRood = loadImage('Praat wolk rood met energie V2.png'); // inladen praat wolk rood met energie
+  Grave = loadImage('Grave.png'); // inladen foto grafsteen
 
   // Icons stats
   HongerIcon = loadImage('honger.png'); // inladen icon honger
@@ -68,6 +78,12 @@ function preload() { // Inladen afbeeldingen
 }
 
 function setup() {
+  Datum = new Date();
+
+  str = "Mario is doodgegaan op " + Datum.getDay() + "-" + Datum.getMonth() + "-" + Datum.getFullYear() + "!"
+
+  console.log(str);
+
   createCanvas(800, 800);
 }
 
@@ -86,185 +102,262 @@ function draw() {
 }
 
 function Statistieken() {
-  image(PlankStats, 95, -20, 600, 175);
+  image(PlankStats, 40, -20, 700, 175);
 
   strokeWeight(4);
   fill(MarioStatsKleur[0]); // Kleur mario wanneer mario honger heeft
-  circle(210, 63, 70); // Circle van statistieken
-  image(HongerIcon, 180, 33, 60, 60); // Toevoegen van icon
+  circle(175, 63, 70); // Circle van statistieken
+  image(HongerIcon, 145, 33, 60, 60); // Toevoegen van icon
+
+  if (MarioHonger > 0) { // Zorgen dat het stopt als het op 0 is
+    MarioHonger -= deltaTime * 0.002; // Zorgen dat het 2 seconden duurt
+  }
 
   fill(MarioStatsKleur[1]); // Kleur mario voor blijheid
-  circle(300, 62, 70); // Circle van statistieken
+  circle(285, 62, 70); // Circle van statistieken
 
-  if (MarioBlij > 51) { // Als het 51 of erboven is
-    image(BlijIcon, 260, 32, 80, 60);
+  if (MarioBlij > 50) { // Als het 51 of erboven is
+    image(BlijIcon, 245, 32, 80, 60);
     MarioStatsKleur[1] = 'green'; // Groene kleur geven aan circle
   }
-  else if (MarioBlij <= 50 && MarioBlij > 21) { // Als hij tussen de 50 en 21 is
-    image(BlijIconNeutraal, 270, 32, 60, 60);
+  else if (MarioBlij <= 50 && MarioBlij >= 21) { // Als hij tussen de 50 en 21 is
+    image(BlijIconNeutraal, 255, 32, 60, 60);
     MarioStatsKleur[1] = 'orange'; // Oranje kleur geven aan circle
   }
-  else if (MarioBlij <= 20) { // Als hij 20 is of er onder
-    image(BlijIconSad, 270, 32, 60, 60);
+  else if (MarioBlij < 21) { // Als hij 20 is of er onder
+    image(BlijIconSad, 255, 32, 60, 60);
     MarioStatsKleur[1] = 'red'; // Rode kleur geven aan circle
+  }
+
+  if (MarioBlij > 0) { // Zorgen dat het stopt als het op 0 is
+    MarioBlij -= deltaTime * 0.002; // Zorgen dat het 2 seconden duurt
   }
 
   fill(MarioStatsKleur[2]); // Kleur mario zijn hygiene
   circle(390, 61, 70); // Circle van statistieken
   image(HygieneIcon, 360, 31, 60, 70)
 
-  fill(MarioStatsKleur[3]); // Kleur voor mario zijn energie level
-  circle(480, 61, 70); // Circle van statistieken
-  image(EnergieIcon, 450, 31, 60, 60)
+  if (MarioHygiene > 0) { // Zorgen dat het stopt als het op 0 is
+    MarioHygiene -= deltaTime * 0.002; // Zorgen dat het 2 seconden duurt
+  }
 
+  fill(MarioStatsKleur[3]); // Kleur voor mario zijn energie level
+  circle(500, 61, 70); // Circle van statistieken
+  image(EnergieIcon, 470, 31, 60, 60)
+
+  if (MarioEnergie > 0) { // Zorgen dat het stopt als het op 0 is
+    MarioEnergie -= deltaTime * 0.002; // Zorgen dat het 2 seconden duurt
+  }
 
   fill(MarioStatsKleur[4]); // Kleur mario zijn gezondheid
-  circle(570, 61, 70); // Circle van statistieken
-  image(GezondheidIcon, 540, 31, 60, 60)
+  circle(605, 61, 70); // Circle van statistieken
+  image(GezondheidIcon, 575, 31, 60, 60)
 
+  if (MarioHonger <= 0 && MarioGezondheid > 0
+    || MarioBlij <= 0 && MarioGezondheid > 0
+    || MarioHygiene <= 0 && MarioGezondheid > 0
+    || MarioEnergie <= 0 && MarioGezondheid > 0) { // Zorgen dat het stopt als het op 0 is
+    MarioGezondheid -= deltaTime * 0.002; // Zorgen dat het 2 seconden duurt
+  }
 
+  // Mariohonger balk
+  strokeWeight(2); // Dikte balk achterzijde
+  fill('red'); // Kleur balk achter
+  rect(PositieX, PositieY, 100, 20); // Balk onderop
+  fill('green'); // Kleur balk bovenop
+  strokeWeight(2); // Dikte balk bovenop
+  rect(PositieX, PositieY, MarioHonger, 20); // Positie balk bovenop
+
+  // Mario blij balk
+  strokeWeight(2); // Dikte balk achterzijde
+  fill('red'); // Kleur balk achter
+  rect(PositieX + 110, PositieY, 100, 20); // Balk onderop
+  fill('green'); // Kleur balk bovenop
+  strokeWeight(2); // Dikte balk bovenop
+  rect(PositieX + 110, PositieY, MarioBlij, 20); // Positie balk bovenop
+
+  // Mario Hygiene balk
+  strokeWeight(2); // Dikte balk achterzijde
+  fill('red'); // Kleur balk achter
+  rect(PositieX + 220, PositieY, 100, 20); // Balk onderop
+  fill('green'); // Kleur balk bovenop
+  strokeWeight(2); // Dikte balk bovenop
+  rect(PositieX + 220, PositieY, MarioHygiene, 20); // Positie balk bovenop
+
+  // Mario Energie balk
+  strokeWeight(2); // Dikte balk achterzijde
+  fill('red'); // Kleur balk achter
+  rect(PositieX + 330, PositieY, 100, 20); // Balk onderop
+  fill('green'); // Kleur balk bovenop
+  strokeWeight(2); // Dikte balk bovenop
+  rect(PositieX + 330, PositieY, MarioEnergie, 20); // Positie balk bovenop
+
+  // Mario gezondheid balk
+  strokeWeight(2); // Dikte balk achterzijde
+  fill('red'); // Kleur balk achter
+  rect(PositieX + 440, PositieY, 100, 20); // Balk onderop
+  fill('green'); // Kleur balk bovenop
+  strokeWeight(2); // Dikte balk bovenop
+  rect(PositieX + 440, PositieY, MarioGezondheid, 20); // Positie balk bovenop
 }
 
 function Mario() { // Pixelart Mario
   strokeWeight(0);
 
-  // Rij 1
-  fill(MarioKleur[0]);
-  rect(MarioX, MarioY, 60, 10);
+  if (MarioGezondheid > 0) {
+    // Rij 1
+    fill(MarioKleur[0]);
+    rect(MarioX, MarioY, 60, 10);
 
-  // Rij 2
-  fill(MarioKleur[0]);
-  rect(MarioX - 10, MarioY + 10, 100, 10);
+    // Rij 2
+    fill(MarioKleur[0]);
+    rect(MarioX - 10, MarioY + 10, 100, 10);
 
-  // Rij 3
-  fill(MarioKleur[1]);
-  rect(MarioX - 10, MarioY + 20, 30, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 20, MarioY + 20, 30, 10);
-  fill(MarioKleur[3]);
-  rect(MarioX + 50, MarioY + 20, 10, 10);
+    // Rij 3
+    fill(MarioKleur[1]);
+    rect(MarioX - 10, MarioY + 20, 30, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 20, MarioY + 20, 30, 10);
+    fill(MarioKleur[3]);
+    rect(MarioX + 50, MarioY + 20, 10, 10);
 
-  // Rij 4
-  fill(MarioKleur[1]);
-  rect(MarioX - 20, MarioY + 30, 10, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX - 10, MarioY + 30, 10, 10);
-  fill(MarioKleur[1]);
-  rect(MarioX, MarioY + 30, 10, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 10, MarioY + 30, 40, 10);
-  fill(MarioKleur[3]);
-  rect(MarioX + 50, MarioY + 30, 10, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 60, MarioY + 30, 30, 10);
+    // Rij 4
+    fill(MarioKleur[1]);
+    rect(MarioX - 20, MarioY + 30, 10, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX - 10, MarioY + 30, 10, 10);
+    fill(MarioKleur[1]);
+    rect(MarioX, MarioY + 30, 10, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 10, MarioY + 30, 40, 10);
+    fill(MarioKleur[3]);
+    rect(MarioX + 50, MarioY + 30, 10, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 60, MarioY + 30, 30, 10);
 
-  // Rij 5
-  fill(MarioKleur[1]);
-  rect(MarioX - 20, MarioY + 40, 10, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX - 10, MarioY + 40, 10, 10);
-  fill(MarioKleur[1]);
-  rect(MarioX, MarioY + 40, 20, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 20, MarioY + 40, 40, 10);
-  fill(MarioKleur[3]);
-  rect(MarioX + 60, MarioY + 40, 10, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 70, MarioY + 40, 30, 10);
+    // Rij 5
+    fill(MarioKleur[1]);
+    rect(MarioX - 20, MarioY + 40, 10, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX - 10, MarioY + 40, 10, 10);
+    fill(MarioKleur[1]);
+    rect(MarioX, MarioY + 40, 20, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 20, MarioY + 40, 40, 10);
+    fill(MarioKleur[3]);
+    rect(MarioX + 60, MarioY + 40, 10, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 70, MarioY + 40, 30, 10);
 
-  // Rij 6
-  fill(MarioKleur[1]);
-  rect(MarioX - 20, MarioY + 50, 20, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX, MarioY + 50, 50, 10);
-  fill(MarioKleur[3]);
-  rect(MarioX + 50, MarioY + 50, 40, 10);
+    // Rij 6
+    fill(MarioKleur[1]);
+    rect(MarioX - 20, MarioY + 50, 20, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX, MarioY + 50, 50, 10);
+    fill(MarioKleur[3]);
+    rect(MarioX + 50, MarioY + 50, 40, 10);
 
-  // Rij 7
-  fill(MarioKleur[2]);
-  rect(MarioX, MarioY + 60, 80, 10);
+    // Rij 7
+    fill(MarioKleur[2]);
+    rect(MarioX, MarioY + 60, 80, 10);
 
-  // Rij 8
-  fill(MarioKleur[0]);
-  rect(MarioX - 10, MarioY + 70, 20, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 10, MarioY + 70, 10, 10);
-  fill(MarioKleur[0]);
-  rect(MarioX + 20, MarioY + 70, 40, 10);
+    // Rij 8
+    fill(MarioKleur[0]);
+    rect(MarioX - 10, MarioY + 70, 20, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 10, MarioY + 70, 10, 10);
+    fill(MarioKleur[0]);
+    rect(MarioX + 20, MarioY + 70, 40, 10);
 
-  // Rij 9
-  fill(MarioKleur[0]);
-  rect(MarioX - 20, MarioY + 80, 30, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 10, MarioY + 80, 10, 10);
-  fill(MarioKleur[0]);
-  rect(MarioX + 20, MarioY + 80, 20, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 40, MarioY + 80, 10, 10);
-  fill(MarioKleur[0]);
-  rect(MarioX + 50, MarioY + 80, 30, 10);
+    // Rij 9
+    fill(MarioKleur[0]);
+    rect(MarioX - 20, MarioY + 80, 30, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 10, MarioY + 80, 10, 10);
+    fill(MarioKleur[0]);
+    rect(MarioX + 20, MarioY + 80, 20, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 40, MarioY + 80, 10, 10);
+    fill(MarioKleur[0]);
+    rect(MarioX + 50, MarioY + 80, 30, 10);
 
-  // Rij 10
-  fill(MarioKleur[0]);
-  rect(MarioX - 30, MarioY + 90, 40, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 10, MarioY + 90, 40, 10);
-  fill(MarioKleur[0]);
-  rect(MarioX + 50, MarioY + 90, 40, 10);
+    // Rij 10
+    fill(MarioKleur[0]);
+    rect(MarioX - 30, MarioY + 90, 40, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 10, MarioY + 90, 40, 10);
+    fill(MarioKleur[0]);
+    rect(MarioX + 50, MarioY + 90, 40, 10);
 
-  // Rij 11
-  fill(MarioKleur[2]);
-  rect(MarioX - 30, MarioY + 100, 20, 10);
-  fill(MarioKleur[0]);
-  rect(MarioX - 10, MarioY + 100, 10, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX, MarioY + 100, 10, 10);
-  fill(MarioKleur[5]);
-  rect(MarioX + 10, MarioY + 100, 10, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 20, MarioY + 100, 20, 10);
-  fill(MarioKleur[5]);
-  rect(MarioX + 40, MarioY + 100, 10, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 50, MarioY + 100, 10, 10);
-  fill(MarioKleur[0]);
-  rect(MarioX + 60, MarioY + 100, 10, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 70, MarioY + 100, 20, 10);
+    // Rij 11
+    fill(MarioKleur[2]);
+    rect(MarioX - 30, MarioY + 100, 20, 10);
+    fill(MarioKleur[0]);
+    rect(MarioX - 10, MarioY + 100, 10, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX, MarioY + 100, 10, 10);
+    fill(MarioKleur[5]);
+    rect(MarioX + 10, MarioY + 100, 10, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 20, MarioY + 100, 20, 10);
+    fill(MarioKleur[5]);
+    rect(MarioX + 40, MarioY + 100, 10, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 50, MarioY + 100, 10, 10);
+    fill(MarioKleur[0]);
+    rect(MarioX + 60, MarioY + 100, 10, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 70, MarioY + 100, 20, 10);
 
-  // Rij 12
-  fill(MarioKleur[2]);
-  rect(MarioX - 30, MarioY + 110, 30, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX, MarioY + 110, 60, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 60, MarioY + 110, 30, 10);
+    // Rij 12
+    fill(MarioKleur[2]);
+    rect(MarioX - 30, MarioY + 110, 30, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX, MarioY + 110, 60, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 60, MarioY + 110, 30, 10);
 
-  // Rij 13
-  fill(MarioKleur[2]);
-  rect(MarioX - 30, MarioY + 120, 20, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX - 10, MarioY + 120, 80, 10);
-  fill(MarioKleur[2]);
-  rect(MarioX + 70, MarioY + 120, 20, 10);
+    // Rij 13
+    fill(MarioKleur[2]);
+    rect(MarioX - 30, MarioY + 120, 20, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX - 10, MarioY + 120, 80, 10);
+    fill(MarioKleur[2]);
+    rect(MarioX + 70, MarioY + 120, 20, 10);
 
-  // Rij 14
-  fill(MarioKleur[4]);
-  rect(MarioX - 10, MarioY + 130, 30, 10);
-  fill(MarioKleur[4]);
-  rect(MarioX + 50, MarioY + 130, 30, 10);
+    // Rij 14
+    fill(MarioKleur[4]);
+    rect(MarioX - 10, MarioY + 130, 30, 10);
+    fill(MarioKleur[4]);
+    rect(MarioX + 50, MarioY + 130, 30, 10);
 
-  // Rij 15
-  fill(MarioKleur[6]);
-  rect(MarioX - 20, MarioY + 140, 30, 10);
-  fill(MarioKleur[6]);
-  rect(MarioX + 50, MarioY + 140, 30, 10);
+    // Rij 15
+    fill(MarioKleur[6]);
+    rect(MarioX - 20, MarioY + 140, 30, 10);
+    fill(MarioKleur[6]);
+    rect(MarioX + 50, MarioY + 140, 30, 10);
 
-  // Rij 16
-  fill(MarioKleur[6]);
-  rect(MarioX - 30, MarioY + 150, 40, 10);
-  fill(MarioKleur[6]);
-  rect(MarioX + 50, MarioY + 150, 40, 10);
+    // Rij 16
+    fill(MarioKleur[6]);
+    rect(MarioX - 30, MarioY + 150, 40, 10);
+    fill(MarioKleur[6]);
+    rect(MarioX + 50, MarioY + 150, 40, 10);
+  }
+
+  else if (MarioGezondheid <= 0) {
+    image(Grave, MarioX, 527, 150, 150)
+    textStyle(BOLD);
+    fill('black');
+    textSize(30);
+    text(str, 150, 250); // Zorgen dat de tekst dat mario dood is gegaan in beeld komt
+
+    MarioStatsKleur[0] = 'red'; // Rood maken stats kleur circkel
+    MarioStatsKleur[1] = 'red'; // Rood maken stats kleur circkel
+    MarioStatsKleur[2] = 'red'; // Rood maken stats kleur circkel
+    MarioStatsKleur[3] = 'red'; // Rood maken stats kleur circkel
+    MarioStatsKleur[4] = 'red'; // Rood maken stats kleur circkel
+
+  }
 }
 
 function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
@@ -278,12 +371,16 @@ function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
   }
 
   // Zorgen voor beweging door de WASD of de pijltjes
-  if (keyIsDown(68) || keyIsDown(39)) { // D of >
-    MarioX = MarioX + MarioSnelheid;
+  if (keyIsDown(68) || keyIsDown(39)) { // D of >\
+    if (MarioGezondheid > 0) { // Zorgen dat hij niet meer kan bewegen als mario dood is
+      MarioX = MarioX + MarioSnelheid; // Voorruit lopen
+    }
   }
 
   if (keyIsDown(65) || keyIsDown(37)) { // A of <
-    MarioX = MarioX - MarioSnelheid;
+    if (MarioGezondheid > 0) { // Zorgen dat hij niet meer kan bewegen als mario dood is
+      MarioX = MarioX - MarioSnelheid; // Achteruit lopen
+    }
   }
 
   // Zorgen dat mario kan springen
@@ -298,7 +395,7 @@ function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
 }
 
 function honger() { // Zorgen dat honger iets doet met de mario
-  if (MarioHonger >= 51) { // Geen honger
+  if (MarioHonger > 50) { // Geen honger
     MarioSnelheid = 5; // Snelheid Mario
     MarioStatsKleur[0] = 'green'; // Kleur groen geven aan stats
   }
@@ -309,7 +406,7 @@ function honger() { // Zorgen dat honger iets doet met de mario
     MarioStatsKleur[0] = 'orange'; // Kleur oranje geven aan stats
   }
 
-  else if (MarioHonger <= 20) { // Heel veel honger
+  else if (MarioHonger < 21 && MarioGezondheid > 0) { // Heel veel honger
     image(HamburgerRood, MarioX - 40, MarioY - 130, 200, 200);
     MarioSnelheid = 1; // Snelheid Mario
     MarioStatsKleur[0] = 'red'; // Kleur red geven aan stats
@@ -317,7 +414,7 @@ function honger() { // Zorgen dat honger iets doet met de mario
 }
 
 function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doet
-  if (MarioBlij >= 51) { // Hartstikke blij
+  if (MarioBlij > 50) { // Hartstikke blij
     MarioSnelheid = 5; // Snelheid Mario
   }
 
@@ -327,7 +424,7 @@ function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doe
     rect(MarioX + 50, MarioY + 30, 10, 10);
   }
 
-  else if (MarioBlij <= 20) { // Niet blij
+  else if (MarioBlij < 21 && MarioGezondheid > 0) { // Niet blij
     MarioSnelheid = 1; // Snelheid Mario
 
     fill('#3D92BA');
@@ -338,7 +435,7 @@ function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doe
 }
 
 function Hygiene() { // Zorgen dat hygiene iets doet bij mario
-  if (MarioHygiene >= 51) { // Schoon
+  if (MarioHygiene > 50) { // Schoon
     MarioSnelheid = 5; // Snelheid Mario
     MarioStatsKleur[2] = 'green'; // Kleur groen geven aan stats
   }
@@ -358,7 +455,7 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
     rect(MarioX + 50, MarioY + 90, 20, 10);
   }
 
-  else if (MarioHygiene <= 20) { // Niet schoon
+  else if (MarioHygiene < 21 && MarioGezondheid > 0) { // Niet schoon
     MarioSnelheid = 1; // Snelheid Mario
     MarioStatsKleur[2] = 'red'; // Kleur rood geven aan stats
 
@@ -387,7 +484,7 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
 }
 
 function Energie() { // Zorgen dat weinig energie iets doet bij mario
-  if (MarioEnergie >= 51) { // Veel energie
+  if (MarioEnergie > 50) { // Veel energie
     MarioSnelheid = 5; // Snelheid Mario
     MarioStatsKleur[3] = 'green'; // Kleur groen geven aan stats
   }
@@ -398,7 +495,7 @@ function Energie() { // Zorgen dat weinig energie iets doet bij mario
     image(EnergieWolk, MarioX + 60, MarioY - 130, 200, 200);
   }
 
-  else if (MarioEnergie <= 20) { // Weinig energie
+  else if (MarioEnergie < 21 && MarioGezondheid > 0) { // Weinig energie
     MarioSnelheid = 1; // Snelheid Mario
     MarioStatsKleur[3] = 'red'; // Kleur rood geven aan stats
     image(EnergieWolkRood, MarioX + 60, MarioY - 130, 200, 200);
@@ -406,7 +503,7 @@ function Energie() { // Zorgen dat weinig energie iets doet bij mario
 }
 
 function gezondheid() { // Gevoelens (gezondheid)
-  if (MarioGezondheid >= 51) { // Als mario gezond is
+  if (MarioGezondheid > 50) { // Als mario gezond is
     MarioKleur[2] = '#FFD6C0'; // Lichaamskleur
     MarioStatsKleur[4] = 'green'; // Kleur groen geven aan stats
 
@@ -424,7 +521,7 @@ function gezondheid() { // Gevoelens (gezondheid)
     circle(MarioX + 155, MarioY - 10, 20); // Circkel eind thermometer
   }
 
-  else if (MarioGezondheid <= 20) {
+  else if (MarioGezondheid < 21 && MarioGezondheid > 0) {
     MarioKleur[2] = '#59FF78'; // Lichaamskleur
     MarioStatsKleur[4] = 'red'; // Kleur rood geven aan stats
 
@@ -436,7 +533,7 @@ function gezondheid() { // Gevoelens (gezondheid)
   }
 }
 
-function keyPressed(){
+function keyPressed() {
   // Zorgen voor springen
   if (keyCode === 32 && MarioSpringBlock == 0 || keyCode === 38 && MarioSpringBlock == 0) {
     MarioValSnelheid -= 800;
