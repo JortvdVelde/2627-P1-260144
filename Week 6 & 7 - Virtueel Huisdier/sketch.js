@@ -27,6 +27,16 @@ let MarioHygiene = 100; // Hygiene stats laten beginnen bij 100
 let MarioEnergie = 100; // Energie stats laten beginnen bij 100
 let MarioGezondheid = 100; // Gezondheid stats laten beginnen bij 100
 
+// Inladen tv 
+let TVOnOff = 0; // Zorgen fat de TV verschijnt of weggaat.
+let TVPlaying = 0; // Zorgen dat stats stoppen als video aanstaat
+let TVTimer = 47; // Zorgen dat de video weggaat na de timer
+
+let TVX = 10; // X-positie tv beeldscherm
+let TVY = 440 ; // Y-positie tv beeldscherm
+let TVL = 350; // Lengte tv
+let TVB = 250; // Breedte tv
+
 // Statistieken
 let PositieX = 120; // Begin X-positie meest linker blok stats
 let PositieY = 120; // Begin Y-positie meest linker blok stats
@@ -50,6 +60,10 @@ let EnergieWolk; // Foto praat wolk energie
 let EnergieWolkRood; // Foto praat wolk energie rood
 
 let Grave; // foto graafsteen als mario dood is
+let TVBlij; // Foto tv voor blijheid
+
+// Inladen video
+let BlijVideo; // Video entertainment
 
 // Datum wanneer mario dood is gegaan
 let Datum;
@@ -64,7 +78,8 @@ let MarioBlijButton; // Button om mario te entertainen
 let MarioHygieneButton; // Button om schoon te maken
 let MarioEnergieButton; // Button om te relaxen
 
-function preload() { // Inladen afbeeldingen
+function preload() { // Inladen afbeeldingen & Video's
+  // Afbeeldingen
   Achtergrond = loadImage('Mario Achtergrond.png'); // Inladen achtergrond foto mario wereld
   Thermometer = loadImage('thermometer.png'); // Inladen thermometer voor gezondheid stat 
   Hamburger = loadImage('Praat wolk met hamburger.png'); // Inladen praat wolk met hamburger
@@ -73,6 +88,7 @@ function preload() { // Inladen afbeeldingen
   EnergieWolk = loadImage('Praat wolk met energie V2.png'); // inladen praat wolk met energie
   EnergieWolkRood = loadImage('Praat wolk rood met energie V2.png'); // inladen praat wolk rood met energie
   Grave = loadImage('Grave.png'); // inladen foto grafsteen
+  TVBlij = loadImage('TV-Blijheid - WB.png'); // inladen foto tv
 
   // Icons stats
   HongerIcon = loadImage('honger.png'); // inladen icon honger
@@ -82,6 +98,9 @@ function preload() { // Inladen afbeeldingen
   HygieneIcon = loadImage('hygiene.png'); // inladen hygiene icon
   EnergieIcon = loadImage('Bliksem.png'); // inladen energie icon
   GezondheidIcon = loadImage('gezondheid.png'); // inladen gezondheid icon
+
+  // Video's
+  BlijVideo = createVideo('Huisdier - Blijheid.mp4'); // inladen video voor de bijheid
 }
 
 function setup() {
@@ -120,20 +139,42 @@ function setup() {
   MarioEnergieButton.size(100, 25);
   MarioEnergieButton.mousePressed(MarioEnergieButtonF);
   MarioEnergieButton.style('font-size', '16px');
+
+  BlijVideo.hide(); // Zorgen dat de video er niet staat
 }
 
 function draw() {
-  background(Achtergrond); // Inladen foto achtergrond als achtergrond
-  Mario(); // Pixelart
+  if (TVPlaying == 0) {
+    background(Achtergrond); // Inladen foto achtergrond als achtergrond
+  }
+  
+  if (TVOnOff == 1) { // Zorgen dat het er alleen staat als het moet
+    image(TVBlij, TVX, TVY, TVL, TVB); // Zorgen dat de tv er komt te staan
+  }
 
-  honger(); // Honger bijhouden
-  Blijheid(); // Blijheid bijhouden
-  Hygiene(); // Hygiene bijhouden
-  Energie(); // Energie bijhouden
-  gezondheid(); // Gezondheid bijhouden
+  if (TVPlaying == 0) { // Zorgen dat het er alleen staat als de tv niet iets afspeelt
+    Mario(); // Pixelart
 
-  Statistieken(); // Statistieken laten zien
-  bewegenWereld(); // Zorgen dat de karakter kan bewegen
+    honger(); // Honger bijhouden
+    Blijheid(); // Blijheid bijhouden
+    Hygiene(); // Hygiene bijhouden
+    Energie(); // Energie bijhouden
+    gezondheid(); // Gezondheid bijhouden
+
+    Statistieken(); // Statistieken laten zien
+    bewegenWereld(); // Zorgen dat de karakter kan bewegen
+
+    MarioHongerButton.show(); // Zorgen dat de button er staat
+    MarioBlijButton.show(); // Zorgen dat de button er staat
+    MarioHygieneButton.show(); // Zorgen dat de button er staat
+    MarioEnergieButton.show(); // Zorgen dat de button er staat
+  }
+
+  else if (TVPlaying == 1) { // Zorgen dat het er alleen staat als de tv iets afspeelt
+    TV(); // Zorgen dat de video op het beeld staat
+  }
+
+  
 }
 
 function Statistieken() {
@@ -144,7 +185,7 @@ function Statistieken() {
   circle(175, 63, 70); // Circle van statistieken
   image(HongerIcon, 145, 33, 60, 60); // Toevoegen van icon
 
-  if (MarioHonger > 0) { // Zorgen dat het stopt als het op 0 is
+  if (MarioHonger > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en dat de tv uitstaat
     MarioHonger -= deltaTime * 0.002; // Zorgen dat het x aantal seconden duurt
   }
 
@@ -164,7 +205,7 @@ function Statistieken() {
     MarioStatsKleur[1] = 'red'; // Rode kleur geven aan circle
   }
 
-  if (MarioBlij > 0) { // Zorgen dat het stopt als het op 0 is
+  if (MarioBlij > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of de tv uit is
     MarioBlij -= deltaTime * 0.0009; // Zorgen dat het x aantal seconden duurt
   }
 
@@ -172,7 +213,7 @@ function Statistieken() {
   circle(390, 61, 70); // Circle van statistieken
   image(HygieneIcon, 360, 31, 60, 70) // Toevoegen van icon
 
-  if (MarioHygiene > 0) { // Zorgen dat het stopt als het op 0 is
+  if (MarioHygiene > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of tv uit is
     MarioHygiene -= deltaTime * 0.001; // Zorgen dat het 2 seconden duurt
   }
 
@@ -180,7 +221,7 @@ function Statistieken() {
   circle(500, 61, 70); // Circle van statistieken
   image(EnergieIcon, 470, 31, 60, 60) // Toevoegen van icon
 
-  if (MarioEnergie > 0) { // Zorgen dat het stopt als het op 0 is
+  if (MarioEnergie > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of tv uit is
     MarioEnergie -= deltaTime * 0.001; // Zorgen dat het x aantal seconden duurt
   }
 
@@ -191,7 +232,7 @@ function Statistieken() {
   if (MarioHonger <= 0 && MarioGezondheid > 0
     || MarioBlij <= 0 && MarioGezondheid > 0
     || MarioHygiene <= 0 && MarioGezondheid > 0
-    || MarioEnergie <= 0 && MarioGezondheid > 0) { // Zorgen dat het stopt als het op 0 is
+    || MarioEnergie <= 0 && MarioGezondheid > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of de tv uit is
     MarioGezondheid -= deltaTime * 0.002; // Zorgen dat het x aantal seconden duurt
   }
 
@@ -598,13 +639,13 @@ function MarioHongerButtonF() { // Mario eten geven button
 }
 
 function MarioBlijButtonF() { // Mario entertainen button
-  if (MarioBlij <= 90) { // Als het gelijk is of onder de 90
-    MarioBlij = MarioBlij + 10; // De bar met 10 verhogen
+  if (TVOnOff == 0) {
+    TVOnOff = 1;
   }
 
-  else if (MarioBlij >= 91) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
-    MarioBlij = 100; // De bar op 100 zetten
-  }
+  else if (TVOnOff == 1) {
+    TVOnOff = 0;
+  } 
 }
 
 function MarioHygieneButtonF() { // Mario schoonmaken button
@@ -625,4 +666,38 @@ function MarioEnergieButtonF() { // Mario relaxen button
   else if (MarioEnergie >= 91) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
     MarioEnergie = 100; // De bar op 100 zetten
   }
+}
+
+function TV() {
+  MarioHongerButton.hide(); // Zorgen dat de button er niet staat
+  MarioBlijButton.hide(); // Zorgen dat de button er niet staat
+  MarioHygieneButton.hide(); // Zorgen dat de button er niet staat
+  MarioEnergieButton.hide(); // Zorgen dat de button er niet staat
+
+  BlijVideo.show(); // Zorgen dat je de video kan zien
+  BlijVideo.play(); // Zorgen dat de video afspeelt
+
+  TVTimer -= deltaTime * 0.001; // Zorgen voor timer dat video weggaat.
+
+  if (TVTimer < 0) { // Zorgen dat alles reset als de timer onder de 0 is.
+    TVPlaying = 0; 
+    TVOnOff = 1;
+    BlijVideo.hide(); // Zorgen dat de video verdwijnt
+    TVTimer = 47; // Zorgen dat je video opnieuw kan starten
+
+    if (MarioBlij <= 53) {
+      MarioBlij = MarioBlij + 47; // Zorgen dat de blijheid omhoog gaat als de video is afgelopen
+    }
+
+    else if (MarioBlij >= 54) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
+    MarioBlij = 100; // De bar op 100 zetten
+    }
+  }
+}
+
+function mousePressed() {
+  if (mouseX > TVX && mouseX < TVX + TVL &&
+    mouseY > TVY && mouseY < TVY + TVB) {
+      TVPlaying = 1;
+    }
 }
