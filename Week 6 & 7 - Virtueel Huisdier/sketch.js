@@ -1,6 +1,7 @@
 // Positie mario
 let MarioX = 400 // X positie van mario
 let MarioY = 510 // Y positie van mario
+let MarioSnelheid = 5; // Hoe snel mario kan bewegen
 
 let MarioValSnelheid = 0; // Zorgen hoe hardt mario valt tijdens springen
 let MarioSpringBlock = 0; // Zorgen dat je niet kan dubbel jumpen
@@ -17,25 +18,23 @@ let MarioKleur = [ // Kleuren van mario
 ];
 let MarioKleurVies = '#A65B41'; // Kleur plekken die vies zijn
 
-let MarioStatsKleur = ['green', 'green', 'green', 'green', 'green']; // Kleur geven circle statistieken
 // Honger - Blij - Hygiene - Energie - Gezondheid
+let MarioStatsKleur = ['green', 'green', 'green', 'green', 'green']; // Kleur geven circle statistieken
+let MarioStats = [100, 100, 100, 100, 100]; // Stats maxs
 
-// Statistieken
-let MarioHonger = 100; // Honger stats laten beginnen bij 100
-let MarioBlij = 100; // Blijheid stats laten beginnen bij 100
-let MarioHygiene = 100; // Hygiene stats laten beginnen bij 100
-let MarioEnergie = 100; // Energie stats laten beginnen bij 100
-let MarioGezondheid = 100; // Gezondheid stats laten beginnen bij 100
-
-// Inladen tv 
+// Zorgen voor props stats
 let TVOnOff = 0; // Zorgen fat de TV verschijnt of weggaat.
 let TVPlaying = 0; // Zorgen dat stats stoppen als video aanstaat
-let TVTimer = 47; // Zorgen dat de video weggaat na de timer
+let TVTimer = 48; // Zorgen dat de video weggaat na de timer
 
 let TVX = 10; // X-positie tv beeldscherm
-let TVY = 440 ; // Y-positie tv beeldscherm
+let TVY = 440; // Y-positie tv beeldscherm
 let TVL = 350; // Lengte tv
 let TVB = 250; // Breedte tv
+
+let BankOnOff = 0; // Bijhouden of de bank er staat.
+let TafelOnOff = 0; // Bijhouden of de tafel er staat
+let DoucheOnOff = 0; // Bijhouden of de douche aan moet
 
 // Statistieken
 let PositieX = 120; // Begin X-positie meest linker blok stats
@@ -61,6 +60,21 @@ let EnergieWolkRood; // Foto praat wolk energie rood
 
 let Grave; // foto graafsteen als mario dood is
 let TVBlij; // Foto tv voor blijheid
+let FotoBank; // Foto bank voor energiebutton
+let Tafel; // Foto van tafel met eten
+let FotoDouche; // foto van douche zonder water
+let FotoDoucheWater; // Foto van douche met water
+
+let Pauze; // Foto van pauze knop
+
+// Inladen geluid
+let MarioDeath; // Geluid als mario dood gaat
+let MarioSpring; // Geluid als mario springt
+let MarioAchtergrondSound; // Geluid voor op de achtergrond
+
+let MarioDeathSound = 0; // Check of het geluid al speelt of heeft gespeeld
+let AchtergrondPlaying = 0; // Check of het geluid al speelt
+let AchtergrondTimer = 188; // aantal seconden dat het geluid op de achtergrond duurt
 
 // Inladen video
 let BlijVideo; // Video entertainment
@@ -69,14 +83,12 @@ let BlijVideo; // Video entertainment
 let Datum;
 let str;
 
-// Rond bewegen door de wereld
-let MarioSnelheid = 5; // Hoe snel mario kan bewegen
-
 // Buttons
 let MarioHongerButton; // Button voor eten geven
 let MarioBlijButton; // Button om mario te entertainen
 let MarioHygieneButton; // Button om schoon te maken
 let MarioEnergieButton; // Button om te relaxen
+let ResetGame; // Button om te resetten
 
 function preload() { // Inladen afbeeldingen & Video's
   // Afbeeldingen
@@ -89,6 +101,11 @@ function preload() { // Inladen afbeeldingen & Video's
   EnergieWolkRood = loadImage('Praat wolk rood met energie V2.png'); // inladen praat wolk rood met energie
   Grave = loadImage('Grave.png'); // inladen foto grafsteen
   TVBlij = loadImage('TV-Blijheid - WB.png'); // inladen foto tv
+  FotoBank = loadImage('Bank.png'); // in laden foto bank
+  Tafel = loadImage('Tafel met eten.png'); // in laden foto tafel met eten
+  FotoDouche = loadImage('Douche zonder water.png'); // inladen foto van douche
+  FotoDoucheWater = loadImage('Douche met water.png'); // inladen foto van douche met water
+  Pauze = loadImage('Pauze knop.png'); // inladen foto van pauze knop
 
   // Icons stats
   HongerIcon = loadImage('honger.png'); // inladen icon honger
@@ -101,6 +118,11 @@ function preload() { // Inladen afbeeldingen & Video's
 
   // Video's
   BlijVideo = createVideo('Huisdier - Blijheid.mp4'); // inladen video voor de bijheid
+
+  // Geluiden
+  MarioDeath = loadSound('Mario Death.mp3'); // Geluid als mario dood gaat
+  MarioSpring = loadSound('Mario Spring.mp3'); // Geluid als mario springt
+  MarioAchtergrondSound = loadSound('Achtergrondmuziek.mp3'); // Geluid voor op de achtergrond.
 }
 
 function setup() {
@@ -140,16 +162,64 @@ function setup() {
   MarioEnergieButton.mousePressed(MarioEnergieButtonF);
   MarioEnergieButton.style('font-size', '16px');
 
+  // Reset game button
+  ResetGame = createButton('Reset');
+  ResetGame.position(320, 290);
+  ResetGame.size(200, 75);
+  ResetGame.mousePressed(resetGameButton);
+  ResetGame.style('font-size', '24px');
+
   BlijVideo.hide(); // Zorgen dat de video er niet staat
+
+  // Data ophalen
+  MarioX = getItem("MarioX"); // Ophalen welke waarde MarioX had
+  MarioY = getItem("MarioY"); // Ophalen welke waarde MarioY had
+  MarioSnelheid = getItem("MarioSnelheid"); // Ophalen welke waarde MarioSnelheid had
+
+  MarioHonger = getItem("Honger"); // Ophalen welke waarde MarioHonger had
+  MarioBlij = getItem("Blijheid"); // Ophalen welke waarde MarioBlij had
+  MarioHygiene = getItem("Hygiene");// Ophalen welke waarde MarioHygiene had
+  MarioEnergie = getItem("Energie"); // Ophalen welke waarde MarioEnergie had
+  MarioGezondheid = getItem("Gezondheid"); // Ophalen welke waarde MarioGezondheid had
+  MarioStatsKleur = getItem("KleurStats"); // Ophalen welke waarde MarioStatskleur had
+
+  if (MarioStatsKleur == null) {
+    MarioStatsKleur = ['green', 'green', 'green', 'green', 'green'];
+  }
 }
 
 function draw() {
+  ResetGame.hide() // hiden van button om te resetten
+
   if (TVPlaying == 0) {
     background(Achtergrond); // Inladen foto achtergrond als achtergrond
+    image(FotoDouche, 607, 440, 140, 200); // Foto van douche zonder water
+
+    if (AchtergrondPlaying == 0) { // Check of het al speelt
+    MarioAchtergrondSound.getLevel(2)
+      MarioAchtergrondSound.play();
+    AchtergrondPlaying = 1; // Zorgen dat het niet nog een keer tegelijk gaat spelen
+    }
+
+    AchtergrondTimer -= deltaTime * 0.001; // Timer om nog een keer te laten spelen
+
+    if (AchtergrondTimer <= 0) {
+      AchtergrondTimer = 188; // Timer resetten
+      MarioAchtergrondSound.stop(); // Geluid stoppen
+      AchtergrondPlaying = 0; // Open zetten dat het nog een keer afgespeelt kan worden
+    }
   }
-  
+
   if (TVOnOff == 1) { // Zorgen dat het er alleen staat als het moet
     image(TVBlij, TVX, TVY, TVL, TVB); // Zorgen dat de tv er komt te staan
+  }
+
+  if (DoucheOnOff == 1) { // Checken of de douche aan moet
+    douche();
+  }
+
+  if (BankOnOff == 1) { // Checken of de bank aan moet
+    bank()
   }
 
   if (TVPlaying == 0) { // Zorgen dat het er alleen staat als de tv niet iets afspeelt
@@ -172,9 +242,15 @@ function draw() {
 
   else if (TVPlaying == 1) { // Zorgen dat het er alleen staat als de tv iets afspeelt
     TV(); // Zorgen dat de video op het beeld staat
+    MarioAchtergrondSound.stop() // Achtergrondgeluid uitzetten
   }
 
-  
+  if (TafelOnOff == 1) { // Checken of de tafel aanmoet
+    tafelEten()
+  }
+
+  datastorage() // aanroepen dat de opslag iets mag doen
+
 }
 
 function Statistieken() {
@@ -185,55 +261,55 @@ function Statistieken() {
   circle(175, 63, 70); // Circle van statistieken
   image(HongerIcon, 145, 33, 60, 60); // Toevoegen van icon
 
-  if (MarioHonger > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en dat de tv uitstaat
-    MarioHonger -= deltaTime * 0.002; // Zorgen dat het x aantal seconden duurt
+  if (MarioStats[0] > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en dat de tv uitstaat
+    MarioStats[0] -= deltaTime * 0.002; // Zorgen dat het x aantal seconden duurt
   }
 
   fill(MarioStatsKleur[1]); // Kleur mario voor blijheid
   circle(285, 62, 70); // Circle van statistieken
 
-  if (MarioBlij > 50) { // Als het 51 of erboven is
+  if (MarioStats[1] > 50) { // Als het 51 of erboven is
     image(BlijIcon, 245, 32, 80, 60); // Toevoegen van icon
     MarioStatsKleur[1] = 'green'; // Groene kleur geven aan circle
   }
-  else if (MarioBlij <= 50 && MarioBlij >= 21) { // Als hij tussen de 50 en 21 is
+  else if (MarioStats[1] <= 50 && MarioStats[1] >= 21) { // Als hij tussen de 50 en 21 is
     image(BlijIconNeutraal, 255, 32, 60, 60); // Toevoegen van icon
     MarioStatsKleur[1] = 'orange'; // Oranje kleur geven aan circle
   }
-  else if (MarioBlij < 21) { // Als hij 20 is of er onder
+  else if (MarioStats[1] < 21) { // Als hij 20 is of er onder
     image(BlijIconSad, 255, 32, 60, 60); // Toevoegen van icon
     MarioStatsKleur[1] = 'red'; // Rode kleur geven aan circle
   }
 
-  if (MarioBlij > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of de tv uit is
-    MarioBlij -= deltaTime * 0.0009; // Zorgen dat het x aantal seconden duurt
+  if (MarioStats[1] > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of de tv uit is
+    MarioStats[1] -= deltaTime * 0.0009; // Zorgen dat het x aantal seconden duurt
   }
 
   fill(MarioStatsKleur[2]); // Kleur mario zijn hygiene
   circle(390, 61, 70); // Circle van statistieken
   image(HygieneIcon, 360, 31, 60, 70) // Toevoegen van icon
 
-  if (MarioHygiene > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of tv uit is
-    MarioHygiene -= deltaTime * 0.001; // Zorgen dat het 2 seconden duurt
+  if (MarioStats[2] > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of tv uit is
+    MarioStats[2] -= deltaTime * 0.001; // Zorgen dat het 2 seconden duurt
   }
 
   fill(MarioStatsKleur[3]); // Kleur voor mario zijn energie level
   circle(500, 61, 70); // Circle van statistieken
   image(EnergieIcon, 470, 31, 60, 60) // Toevoegen van icon
 
-  if (MarioEnergie > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of tv uit is
-    MarioEnergie -= deltaTime * 0.001; // Zorgen dat het x aantal seconden duurt
+  if (MarioStats[3] > 0 && TVPlaying == 0 && BankOnOff == 0) { // Zorgen dat het stopt als het op 0 is en check of tv uit is
+    MarioStats[3] -= deltaTime * 0.001; // Zorgen dat het x aantal seconden duurt
   }
 
   fill(MarioStatsKleur[4]); // Kleur mario zijn gezondheid
   circle(605, 61, 70); // Circle van statistieken
   image(GezondheidIcon, 575, 31, 60, 60) // Toevoegen van icon
 
-  if (MarioHonger <= 0 && MarioGezondheid > 0
-    || MarioBlij <= 0 && MarioGezondheid > 0
-    || MarioHygiene <= 0 && MarioGezondheid > 0
-    || MarioEnergie <= 0 && MarioGezondheid > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of de tv uit is
-    MarioGezondheid -= deltaTime * 0.002; // Zorgen dat het x aantal seconden duurt
+  if (MarioStats[0] <= 0 && MarioStats[4] > 0
+    || MarioStats[1] <= 0 && MarioStats[4] > 0
+    || MarioStats[2] <= 0 && MarioStats[4] > 0
+    || MarioStats[3] <= 0 && MarioStats[4] > 0 && TVPlaying == 0) { // Zorgen dat het stopt als het op 0 is en check of de tv uit is
+    MarioStats[4] -= deltaTime * 0.002; // Zorgen dat het x aantal seconden duurt
   }
 
   // Mariohonger balk
@@ -242,7 +318,7 @@ function Statistieken() {
   rect(PositieX, PositieY, 100, 20); // Balk onderop
   fill('green'); // Kleur balk bovenop
   strokeWeight(2); // Dikte balk bovenop
-  rect(PositieX, PositieY, MarioHonger, 20); // Positie balk bovenop
+  rect(PositieX, PositieY, MarioStats[0], 20); // Positie balk bovenop
 
   // Mario blij balk
   strokeWeight(2); // Dikte balk achterzijde
@@ -250,7 +326,7 @@ function Statistieken() {
   rect(PositieX + 110, PositieY, 100, 20); // Balk onderop
   fill('green'); // Kleur balk bovenop
   strokeWeight(2); // Dikte balk bovenop
-  rect(PositieX + 110, PositieY, MarioBlij, 20); // Positie balk bovenop
+  rect(PositieX + 110, PositieY, MarioStats[1], 20); // Positie balk bovenop
 
   // Mario Hygiene balk
   strokeWeight(2); // Dikte balk achterzijde
@@ -258,7 +334,7 @@ function Statistieken() {
   rect(PositieX + 220, PositieY, 100, 20); // Balk onderop
   fill('green'); // Kleur balk bovenop
   strokeWeight(2); // Dikte balk bovenop
-  rect(PositieX + 220, PositieY, MarioHygiene, 20); // Positie balk bovenop
+  rect(PositieX + 220, PositieY, MarioStats[2], 20); // Positie balk bovenop
 
   // Mario Energie balk
   strokeWeight(2); // Dikte balk achterzijde
@@ -266,7 +342,7 @@ function Statistieken() {
   rect(PositieX + 330, PositieY, 100, 20); // Balk onderop
   fill('green'); // Kleur balk bovenop
   strokeWeight(2); // Dikte balk bovenop
-  rect(PositieX + 330, PositieY, MarioEnergie, 20); // Positie balk bovenop
+  rect(PositieX + 330, PositieY, MarioStats[3], 20); // Positie balk bovenop
 
   // Mario gezondheid balk
   strokeWeight(2); // Dikte balk achterzijde
@@ -274,28 +350,24 @@ function Statistieken() {
   rect(PositieX + 440, PositieY, 100, 20); // Balk onderop
   fill('green'); // Kleur balk bovenop
   strokeWeight(2); // Dikte balk bovenop
-  rect(PositieX + 440, PositieY, MarioGezondheid, 20); // Positie balk bovenop
+  rect(PositieX + 440, PositieY, MarioStats[4], 20); // Positie balk bovenop
 
   // Zorgen dat de stats op 0 gezet worden zodra mario dood is
-  if (MarioGezondheid <= 0) {
-    MarioStatsKleur[0] = 'red'; // Rood maken stats kleur circkel
-    MarioStatsKleur[1] = 'red'; // Rood maken stats kleur circkel
-    MarioStatsKleur[2] = 'red'; // Rood maken stats kleur circkel
-    MarioStatsKleur[3] = 'red'; // Rood maken stats kleur circkel
-    MarioStatsKleur[4] = 'red'; // Rood maken stats kleur circkel
+  if (MarioStats[4] <= 0) {
+    for (let index = 0; index < 5; index++) {
+      MarioStatsKleur[index] = 'red' // Rood maken stats kleur
+    }
 
-    MarioHonger = 0; // Zorgen dat alle bars op 0 staan.
-    MarioBlij = 0; // Zorgen dat alle bars op 0 staan.
-    MarioHygiene = 0; // Zorgen dat alle bars op 0 staan.
-    MarioEnergie = 0; // Zorgen dat alle bars op 0 staan.
-    MarioGezondheid = 0; // Zorgen dat alle bars op 0 staan.
+    for (let index = 0; index < 5; index++) {
+      MarioStats[index] = 0 // Alle balken op 0 zetten
+    }
   }
 }
 
-function Mario() { // Pixelart Mario
+function Mario() { // Pixelart Mario en aansturing mario dood of niet
   strokeWeight(0);
 
-  if (MarioGezondheid > 0) {
+  if (MarioStats[4] > 0) {
     // Rij 1
     fill(MarioKleur[0]);
     rect(MarioX, MarioY, 60, 10);
@@ -441,8 +513,21 @@ function Mario() { // Pixelart Mario
     MarioEnergieButton.show(); // Button te voorschijn halen als mario nog leeft
   }
 
-  else if (MarioGezondheid <= 0) {
-    image(Grave, MarioX, 527, 150, 150) // Zorgen dat er een grafsteen komt als mario dood is.
+  else if (MarioStats[4] <= 0) {
+    if (BankOnOff == 0) { // Checken of het op de bank moet staan
+      image(Grave, MarioX, 527, 150, 150) // Zorgen dat er een grafsteen komt als mario dood is.
+    }
+
+    else if (BankOnOff == 1) { // Checken of het op de bank moet staan
+      image(Grave, MarioX, MarioY + 20, 150, 150) // Zorgen dat er een grafsteen komt als mario dood is.
+    }
+
+    if (MarioDeathSound == 0) { // Controle of het al een keer is afgespeelt
+      MarioAchtergrondSound.stop() // Achtergrond muziek stoppen
+      MarioDeath.play(); // Afspelen geluid als mario dood gaat
+      MarioDeathSound = 1; // Zorgen dat het niet nog een keer afspeelt
+    }
+
     textStyle(BOLD);
     fill('black');
     textSize(30);
@@ -453,6 +538,9 @@ function Mario() { // Pixelart Mario
     MarioBlijButton.hide(); // Button weghalen als mario dood is
     MarioHygieneButton.hide(); // Button weghalen als mario dood is
     MarioEnergieButton.hide(); // Button weghalen als mario dood is
+
+    // Button show
+    ResetGame.show() // Button om te resetten laten zien
   }
 }
 
@@ -468,56 +556,58 @@ function bewegenWereld() { // Zorgen dat mario heen en weer kan gaan
 
   // Zorgen voor beweging door de WASD of de pijltjes
   if (keyIsDown(68) || keyIsDown(39)) { // D of >\
-    if (MarioGezondheid > 0) { // Zorgen dat hij niet meer kan bewegen als mario dood is
+    if (MarioStats[4] > 0) { // Zorgen dat hij niet meer kan bewegen als mario dood is
       MarioX = MarioX + MarioSnelheid; // Voorruit lopen
     }
   }
 
   if (keyIsDown(65) || keyIsDown(37)) { // A of <
-    if (MarioGezondheid > 0) { // Zorgen dat hij niet meer kan bewegen als mario dood is
+    if (MarioStats[4] > 0) { // Zorgen dat hij niet meer kan bewegen als mario dood is
       MarioX = MarioX - MarioSnelheid; // Achteruit lopen
     }
   }
 
   // Zorgen dat mario kan springen
-  MarioY = MarioY += MarioValSnelheid * deltaTime * 0.001;
-  MarioValSnelheid = MarioValSnelheid + 20;
+  if (MarioStats[4] > 0 || BankOnOff == 0) {
+    MarioY = MarioY += MarioValSnelheid * deltaTime * 0.001;
+    MarioValSnelheid = MarioValSnelheid + 20;
 
-  if (MarioValSnelheid > 0 && MarioY > 510) { // Zorgen dat hij stopt met vallen
-    MarioY = 510; // Zorgen dat mario stopt met vallen bij Y 510
-    MarioValSnelheid = 0;
-    MarioSpringBlock = 0; // Resetten dat je weer kan springen
+    if (MarioValSnelheid > 0 && MarioY > 510) { // Zorgen dat hij stopt met vallen
+      MarioY = 510; // Zorgen dat mario stopt met vallen bij Y 510
+      MarioValSnelheid = 0;
+      MarioSpringBlock = 0; // Resetten dat je weer kan springen
+    }
   }
 }
 
 function honger() { // Zorgen dat honger iets doet met de mario
-  if (MarioHonger > 50) { // Geen honger
+  if (MarioStats[0] > 50) { // Geen honger
     MarioStatsKleur[0] = 'green'; // Kleur groen geven aan stats
   }
 
-  else if (MarioHonger <= 50 && MarioHonger >= 21) { // Meer honger
+  else if (MarioStats[0] <= 50 && MarioStats[0] >= 21) { // Meer honger
     image(Hamburger, MarioX - 40, MarioY - 130, 200, 200); // Foto van praat wolk met een hamburger
     MarioStatsKleur[0] = 'orange'; // Kleur oranje geven aan stats
   }
 
-  else if (MarioHonger < 21 && MarioGezondheid > 0) { // Heel veel honger
+  else if (MarioStats[0] < 21 && MarioStats[4] > 0) { // Heel veel honger
     image(HamburgerRood, MarioX - 40, MarioY - 130, 200, 200); // Foto van een rode praat wolk met een hamburger
     MarioStatsKleur[0] = 'red'; // Kleur red geven aan stats
   }
 }
 
 function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doet
-  if (MarioBlij > 50) {
+  if (MarioStats[1] > 50) {
     MarioStatsKleur[1] = 'green'; // Kleur groen geven aan stats
   }
 
-  else if (MarioBlij <= 50 && MarioBlij >= 21) { // Normaal blij
+  else if (MarioStats[1] <= 50 && MarioStats[1] >= 21) { // Normaal blij
     MarioStatsKleur[1] = 'orange'; // Kleur oranje geven aan stats
     fill('#3D92BA'); // Kleur tranen
     rect(MarioX + 50, MarioY + 30, 10, 10); // Zorgen voor 1 blokje met tranen
   }
 
-  else if (MarioBlij < 21 && MarioGezondheid > 0) { // Niet blij
+  else if (MarioStats[1] < 21 && MarioStats[4] > 0) { // Niet blij
     MarioStatsKleur[1] = 'red'; // Kleur red geven aan stats
     fill('#3D92BA');
     rect(MarioX + 50, MarioY + 30, 10, 20);
@@ -527,11 +617,11 @@ function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doe
 }
 
 function Hygiene() { // Zorgen dat hygiene iets doet bij mario
-  if (MarioHygiene > 50) { // Schoon
+  if (MarioStats[2] > 50) { // Schoon
     MarioStatsKleur[2] = 'green'; // Kleur groen geven aan stats
   }
 
-  else if (MarioHygiene <= 50 && MarioHygiene >= 21) { // Beetje schoon
+  else if (MarioStats[2] <= 50 && MarioStats[2] >= 21) { // Beetje schoon
     MarioStatsKleur[2] = 'orange'; // Kleur oranje geven aan stats
 
     fill(MarioKleurVies);
@@ -545,7 +635,7 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
     rect(MarioX + 50, MarioY + 90, 20, 10);
   }
 
-  else if (MarioHygiene < 21 && MarioGezondheid > 0) { // Niet schoon
+  else if (MarioStats[2] < 21 && MarioStats[4] > 0) { // Niet schoon
     MarioStatsKleur[2] = 'red'; // Kleur rood geven aan stats
 
     fill(MarioKleurVies);
@@ -573,30 +663,30 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
 }
 
 function Energie() { // Zorgen dat weinig energie iets doet bij mario
-  if (MarioEnergie > 50) { // Veel energie
+  if (MarioStats[3] > 50) { // Veel energie
     MarioStatsKleur[3] = 'green'; // Kleur groen geven aan stats
   }
 
-  else if (MarioEnergie <= 50 && MarioEnergie >= 21) { // Minder energie
+  else if (MarioStats[3] <= 50 && MarioStats[3] >= 21) { // Minder energie
     MarioStatsKleur[3] = 'orange'; // Kleur oranje geven aan stats
     image(EnergieWolk, MarioX + 60, MarioY - 130, 200, 200);
   }
 
-  else if (MarioEnergie < 21 && MarioGezondheid > 0) { // Weinig energie
+  else if (MarioStats[3] < 21 && MarioStats[4] > 0) { // Weinig energie
     MarioStatsKleur[3] = 'red'; // Kleur rood geven aan stats
     image(EnergieWolkRood, MarioX + 60, MarioY - 130, 200, 200);
   }
 }
 
 function gezondheid() { // Gevoelens (gezondheid)
-  if (MarioGezondheid > 50) { // Als mario gezond is
+  if (MarioStats[4] > 50) { // Als mario gezond is
     MarioKleur[2] = '#FFD6C0'; // Lichaamskleur
     MarioStatsKleur[4] = 'green'; // Kleur groen geven aan stats
 
     MarioSnelheid = 5; // Mario zijn snelheid
   }
 
-  else if (MarioGezondheid <= 50 && MarioGezondheid >= 21) {
+  else if (MarioStats[4] <= 50 && MarioStats[4] >= 21) {
     MarioKleur[2] = '#96FFA9'; // Lichaamskleur
     MarioStatsKleur[4] = 'orange'; // Kleur oranje geven aan stats
 
@@ -607,7 +697,7 @@ function gezondheid() { // Gevoelens (gezondheid)
     circle(MarioX + 155, MarioY - 10, 20); // Circkel eind thermometer
   }
 
-  else if (MarioGezondheid < 21 && MarioGezondheid > 0) {
+  else if (MarioStats[4] < 21 && MarioStats[4] > 0) {
     MarioKleur[2] = '#59FF78'; // Lichaamskleur
     MarioStatsKleur[4] = 'red'; // Kleur rood geven aan stats
 
@@ -621,20 +711,21 @@ function gezondheid() { // Gevoelens (gezondheid)
 
 function keyPressed() {
   // Zorgen voor springen
-  if (keyCode === 32 && MarioSpringBlock == 0 || keyCode === 38 && MarioSpringBlock == 0) {
+  if (keyCode === 32 && MarioSpringBlock == 0  && TVPlaying == 0 || keyCode === 38 && MarioSpringBlock == 0 && TVPlaying == 0) {
     MarioValSnelheid -= 800;
     MarioSpringBlock = 1; // Uitzetten dat je kan dubbeljumpen
+    MarioSpring.play(); // Zorgen voor spring geluid
   }
 }
 
 // Buttons
 function MarioHongerButtonF() { // Mario eten geven button
-  if (MarioHonger <= 90) { // Als het gelijk is of onder de 90
-    MarioHonger = MarioHonger + 10; // De bar met 10 verhogen
+  if (TafelOnOff == 0) {
+    TafelOnOff = 1;
   }
 
-  else if (MarioHonger >= 91) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
-    MarioHonger = 100; // De bar op 100 zetten
+  else if (TafelOnOff == 1) {
+    TafelOnOff = 0;
   }
 }
 
@@ -645,26 +736,60 @@ function MarioBlijButtonF() { // Mario entertainen button
 
   else if (TVOnOff == 1) {
     TVOnOff = 0;
-  } 
+  }
 }
 
 function MarioHygieneButtonF() { // Mario schoonmaken button
-  if (MarioHygiene <= 90) { // Als het gelijk is of onder de 90
-    MarioHygiene = MarioHygiene + 10; // De bar met 10 verhogen
+  if (DoucheOnOff == 0) {
+    DoucheOnOff = 1; // Aanzetten dat de douche moet komen
   }
 
-  else if (MarioHygiene >= 91) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
-    MarioHygiene = 100; // De bar op 100 zetten
+  else if (DoucheOnOff == 1) {
+    DoucheOnOff = 0; // Uitzetten dat de douche moet komen
   }
 }
 
 function MarioEnergieButtonF() { // Mario relaxen button
-  if (MarioEnergie <= 90) { // Als het gelijk is of onder de 90
-    MarioEnergie = MarioEnergie + 10; // De bar met 10 verhogen
+  if (BankOnOff == 0) {
+    BankOnOff = 1; // Aanzetten dat de bank moet komen
   }
 
-  else if (MarioEnergie >= 91) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
-    MarioEnergie = 100; // De bar op 100 zetten
+  else if (BankOnOff == 1) {
+    BankOnOff = 0; // Uitzetten dat de bank moet komen
+  }
+}
+
+function resetGameButton() {
+  MarioX = 400; // MarioX op begin zetten
+  MarioY = 510; // MarioY op begin zetten
+  MarioSnelheid = 5; // MarioSnelheid op begin snelheid zetten
+
+  for (let index = 0; index < 5; index++) {
+    MarioStats[index] = 100 // Alle balken resetten naar 100
+  }
+
+  for (let index = 0; index < 5; index++) { // Alle circkels resetten naar groen
+    MarioStatsKleur[index] = 'green';
+  }
+
+  BankOnOff = 0; // Bank weghalen
+  TVOnOff = 0; // TV weghalen
+  MarioDeathSound = 0; // Death sound resetten
+  AchtergrondPlaying = 0; // Open zetten dat het nog een keer afgespeelt kan worden
+  AchtergrondTimer = 188; // Timer resetten voor achtergrond sound
+}
+
+// Acties statisiteken
+function tafelEten() {
+  if (MarioStats[0] <= 100) {
+    MarioStats[0] += deltaTime * 0.021; // Zorgen dat de stats omhoog gaan
+    image(Tafel, 325, 530, 350, 200); // Foto van de tafel
+    MarioX = 450; // MarioX bij de tafel zetten
+    MarioY = 510; // MarioY bij de tafel zetten
+  }
+
+  else if (MarioStats[0] > 100) { // Als mario volle buik heeft wordt alles weer uitgezet.
+    TafelOnOff = 0; // Zorgen dat de tafel weer weggaat
   }
 }
 
@@ -680,24 +805,63 @@ function TV() {
   TVTimer -= deltaTime * 0.001; // Zorgen voor timer dat video weggaat.
 
   if (TVTimer < 0) { // Zorgen dat alles reset als de timer onder de 0 is.
-    TVPlaying = 0; 
-    TVOnOff = 1;
+    TVPlaying = 0;
+    TVOnOff = 0;
+    BlijVideo.stop(); // Video stoppen als hij afgelopen is
     BlijVideo.hide(); // Zorgen dat de video verdwijnt
-    TVTimer = 47; // Zorgen dat je video opnieuw kan starten
+    TVTimer = 50; // Zorgen dat je video opnieuw kan starten
+    AchtergrondPlaying = 0; // Open zetten dat het nog een keer afgespeelt kan worden
+    AchtergrondTimer = 188; // Timer resetten
 
-    if (MarioBlij <= 53) {
-      MarioBlij = MarioBlij + 47; // Zorgen dat de blijheid omhoog gaat als de video is afgelopen
+    if (MarioStats[1] <= 50) {
+      MarioStats[1] = MarioStats[1] + 50; // Zorgen dat de blijheid omhoog gaat als de video is afgelopen
     }
 
-    else if (MarioBlij >= 54) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
-    MarioBlij = 100; // De bar op 100 zetten
+    else if (MarioStats[1] >= 51) { // Als het 91 of hoger is / blokkeren dat hij niet verder kan
+      MarioStats[1] = 100; // De bar op 100 zetten
     }
+  }
+}
+
+function douche() {
+  if (MarioStats[2] <= 100) {
+    MarioStats[2] += deltaTime * 0.021; // Zorgen dat de stats omhoog gaan
+    image(FotoDoucheWater, 596, 440, 140, 200); // foto van de douche
+    MarioX = 600; // MarioX onder de douche zetten
+    MarioY = 510; // MarioY onder de douche zetten zetten
+  }
+
+  else if (MarioStats[2] > 100) { // Als mario volle hygiene heeft wordt alles weer uitgezet.
+    DoucheOnOff = 0; // Zorgen dat de bank weer weggaat
+  }
+}
+
+function bank() {
+  if (MarioStats[3] <= 100) {
+    MarioStats[3] += deltaTime * 0.021; // Zorgen dat de stats omhoog gaan
+    image(FotoBank, 425, 514, 350, 200); // Foto van de bank
+    MarioX = 550; // MarioX op de bank zetten
+    MarioY = 440; // MarioY op de bank zetten
+  }
+
+  else if (MarioStats[3] > 100) { // Als mario volle energie heeft wordt alles weer uitgezet.
+    BankOnOff = 0; // Zorgen dat de bank weer weggaat
   }
 }
 
 function mousePressed() {
   if (mouseX > TVX && mouseX < TVX + TVL &&
-    mouseY > TVY && mouseY < TVY + TVB) {
-      TVPlaying = 1;
-    }
+    mouseY > TVY && mouseY < TVY + TVB && TVOnOff == 1) {
+    TVPlaying = 1;
+  }
+}
+
+// Data opslaan
+function datastorage() {
+  storeItem("MarioX", MarioX); // Opslaan X positie mario
+  storeItem("MarioY", MarioY); // Opslaan Y positie mario
+  storeItem("MarioSnelheid", MarioSnelheid); // Opslaan wat de snelheid van mario is
+
+  storeItem("Statistieken", MarioStats); // Opslaan stats voor honger
+  storeItem("Kleur Statistieken", MarioStatsKleur); // Opslaan kleuren statistieken
 }
