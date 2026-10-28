@@ -65,8 +65,6 @@ let Tafel; // Foto van tafel met eten
 let FotoDouche; // foto van douche zonder water
 let FotoDoucheWater; // Foto van douche met water
 
-let Pauze; // Foto van pauze knop
-
 // Inladen geluid
 let MarioDeath; // Geluid als mario dood gaat
 let MarioSpring; // Geluid als mario springt
@@ -90,6 +88,9 @@ let MarioHygieneButton; // Button om schoon te maken
 let MarioEnergieButton; // Button om te relaxen
 let ResetGame; // Button om te resetten
 
+let TestDoor;
+let OfflineProgress = []; // Zorgen dat offline de stats doorgaan
+
 function preload() { // Inladen afbeeldingen & Video's
   // Afbeeldingen
   Achtergrond = loadImage('Mario Achtergrond.png'); // Inladen achtergrond foto mario wereld
@@ -105,7 +106,6 @@ function preload() { // Inladen afbeeldingen & Video's
   Tafel = loadImage('Tafel met eten.png'); // in laden foto tafel met eten
   FotoDouche = loadImage('Douche zonder water.png'); // inladen foto van douche
   FotoDoucheWater = loadImage('Douche met water.png'); // inladen foto van douche met water
-  Pauze = loadImage('Pauze knop.png'); // inladen foto van pauze knop
 
   // Icons stats
   HongerIcon = loadImage('honger.png'); // inladen icon honger
@@ -127,10 +127,8 @@ function preload() { // Inladen afbeeldingen & Video's
 
 function setup() {
   Datum = new Date();
-
   str = "Mario is doodgegaan op " + Datum.getDate() + "-" + (Datum.getMonth() + 1) + "-" + Datum.getFullYear() + "!"
 
-  console.log(str);
   createCanvas(800, 800);
 
   // Buttons aanmaken
@@ -176,29 +174,41 @@ function setup() {
   MarioY = getItem("MarioY"); // Ophalen welke waarde MarioY had
   MarioSnelheid = getItem("MarioSnelheid"); // Ophalen welke waarde MarioSnelheid had
 
-  MarioHonger = getItem("Honger"); // Ophalen welke waarde MarioHonger had
-  MarioBlij = getItem("Blijheid"); // Ophalen welke waarde MarioBlij had
-  MarioHygiene = getItem("Hygiene");// Ophalen welke waarde MarioHygiene had
-  MarioEnergie = getItem("Energie"); // Ophalen welke waarde MarioEnergie had
-  MarioGezondheid = getItem("Gezondheid"); // Ophalen welke waarde MarioGezondheid had
-  MarioStatsKleur = getItem("KleurStats"); // Ophalen welke waarde MarioStatskleur had
+  MarioStats = getItem("Statistieken"); // Ophalen welke waarde MarioStats had
 
   if (MarioStatsKleur == null) {
     MarioStatsKleur = ['green', 'green', 'green', 'green', 'green'];
+  }
+
+  // Zorgen dat stats omlaag gaan als je niet speelt
+  let VorigeDatum = new Date(2026, 9, 28, 15, 28, 0, 0); // Datum voor de vorige datum
+
+  for (let index = 0; index < 5; index++) {
+    OfflineProgress[index] = (Date.now() - VorigeDatum) * 0.001;
+  }
+
+  OfflineProgress[0] = OfflineProgress[0] / 182
+  MarioStats[0] = MarioStats[0] - OfflineProgress[0];
+
+  for (let index = 0; index < 3; index++) {
+    OfflineProgress[1 + index] = OfflineProgress[1 + index] / 363 + index * 5
+    MarioStats[1 + index] = MarioStats[1 + index] - OfflineProgress[1 + index];
   }
 }
 
 function draw() {
   ResetGame.hide() // hiden van button om te resetten
 
+  console.log(TestDoor);
+
   if (TVPlaying == 0) {
     background(Achtergrond); // Inladen foto achtergrond als achtergrond
     image(FotoDouche, 607, 440, 140, 200); // Foto van douche zonder water
 
     if (AchtergrondPlaying == 0) { // Check of het al speelt
-    MarioAchtergrondSound.getLevel(2)
+      MarioAchtergrondSound.getLevel(2)
       MarioAchtergrondSound.play();
-    AchtergrondPlaying = 1; // Zorgen dat het niet nog een keer tegelijk gaat spelen
+      AchtergrondPlaying = 1; // Zorgen dat het niet nog een keer tegelijk gaat spelen
     }
 
     AchtergrondTimer -= deltaTime * 0.001; // Timer om nog een keer te laten spelen
@@ -594,6 +604,10 @@ function honger() { // Zorgen dat honger iets doet met de mario
     image(HamburgerRood, MarioX - 40, MarioY - 130, 200, 200); // Foto van een rode praat wolk met een hamburger
     MarioStatsKleur[0] = 'red'; // Kleur red geven aan stats
   }
+
+  if (MarioStats[0] <= 0) {
+    MarioStats[0] = 0;
+  }
 }
 
 function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doet
@@ -613,6 +627,10 @@ function Blijheid() { // Zorgen dat als mario minder blij wordt dat dat iets doe
     rect(MarioX + 50, MarioY + 30, 10, 20);
     rect(MarioX + 60, MarioY + 40, 10, 10);
     rect(MarioX + 40, MarioY + 40, 10, 20);
+  }
+
+  if (MarioStats[1] <= 0) {
+    MarioStats[1] = 0;
   }
 }
 
@@ -660,6 +678,10 @@ function Hygiene() { // Zorgen dat hygiene iets doet bij mario
     rect(MarioX + 65, MarioY + 35, 10, 20);
     rect(MarioX + 65, MarioY + 35, 20, 10);
   }
+
+  if (MarioStats[2] <= 0) {
+    MarioStats[2] = 0;
+  }
 }
 
 function Energie() { // Zorgen dat weinig energie iets doet bij mario
@@ -675,6 +697,10 @@ function Energie() { // Zorgen dat weinig energie iets doet bij mario
   else if (MarioStats[3] < 21 && MarioStats[4] > 0) { // Weinig energie
     MarioStatsKleur[3] = 'red'; // Kleur rood geven aan stats
     image(EnergieWolkRood, MarioX + 60, MarioY - 130, 200, 200);
+  }
+
+  if (MarioStats[3] <= 0) {
+    MarioStats[3] = 0;
   }
 }
 
@@ -707,11 +733,15 @@ function gezondheid() { // Gevoelens (gezondheid)
     fill('red'); // Zorgen dat circle kleur krijgt
     circle(MarioX + 155, MarioY - 10, 30); // Circkel eind thermometer
   }
+
+  if (MarioStats[4] <= 0) {
+    MarioStats[4] = 0;
+  }
 }
 
 function keyPressed() {
   // Zorgen voor springen
-  if (keyCode === 32 && MarioSpringBlock == 0  && TVPlaying == 0 || keyCode === 38 && MarioSpringBlock == 0 && TVPlaying == 0) {
+  if (keyCode === 32 && MarioSpringBlock == 0 && TVPlaying == 0 || keyCode === 38 && MarioSpringBlock == 0 && TVPlaying == 0) {
     MarioValSnelheid -= 800;
     MarioSpringBlock = 1; // Uitzetten dat je kan dubbeljumpen
     MarioSpring.play(); // Zorgen voor spring geluid
@@ -864,4 +894,5 @@ function datastorage() {
 
   storeItem("Statistieken", MarioStats); // Opslaan stats voor honger
   storeItem("Kleur Statistieken", MarioStatsKleur); // Opslaan kleuren statistieken
+  storeItem("Datum Offline", Date.now()); // Opslaan datum voor de offline progress
 }
