@@ -180,26 +180,48 @@ function setup() {
     MarioStatsKleur = ['green', 'green', 'green', 'green', 'green'];
   }
 
+
+
+
   // Zorgen dat stats omlaag gaan als je niet speelt
-  let VorigeDatum = new Date(2026, 9, 28, 15, 28, 0, 0); // Datum voor de vorige datum
+  let VorigeDatum = getItem("Datum Offline"); // Datum voor de vorige datum
 
-  for (let index = 0; index < 5; index++) {
-    OfflineProgress[index] = (Date.now() - VorigeDatum) * 0.001;
+  if (VorigeDatum != null) {
+    let nu = Date.now();
+
+    let difference = (nu - VorigeDatum); //de delta tijd tussen vorige en huidige sessie in ms
+    let tenHoursInMS = 1000 * 60 * 60 * 10;
+    let percentage = 100 / tenHoursInMS * difference;
+
+
+    for (let index = 0; index < 5; index++) {
+      OfflineProgress[index] = percentage;
+
+      console.log("mijn Progress " + index + ": " + VorigeDatum + " - " + nu + " = " + difference + " -->percentage 10hours = " + percentage);
+    }
+
+    console.log("You've been offline: " + percentage);
+
+    MarioStats[0] = MarioStats[0] - OfflineProgress[0];
+
+    for (let index = 0; index < 3; index++) {
+      //OfflineProgress[1 + index] = OfflineProgress[1 + index] / 363 + index * 5
+      //MarioStats[1 + index] = MarioStats[1 + index] - OfflineProgress[1 + index];
+    }
+
+    console.log(OfflineProgress);
+  }
+  else {
+    console.log("VorigeDatum niet gevonden!");
   }
 
-  OfflineProgress[0] = OfflineProgress[0] / 182
-  MarioStats[0] = MarioStats[0] - OfflineProgress[0];
 
-  for (let index = 0; index < 3; index++) {
-    OfflineProgress[1 + index] = OfflineProgress[1 + index] / 363 + index * 5
-    MarioStats[1 + index] = MarioStats[1 + index] - OfflineProgress[1 + index];
-  }
 }
 
 function draw() {
   ResetGame.hide() // hiden van button om te resetten
 
-  console.log(TestDoor);
+
 
   if (TVPlaying == 0) {
     background(Achtergrond); // Inladen foto achtergrond als achtergrond
