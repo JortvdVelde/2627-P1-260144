@@ -883,10 +883,6 @@ function bank() {
     MarioX = 550; // MarioX op de bank zetten
     MarioY = 440; // MarioY op de bank zetten
   }
-
-  else if (MarioStats[3] > 100) { // Als mario volle energie heeft wordt alles weer uitgezet.
-    BankOnOff = 0; // Zorgen dat de bank weer weggaat
-  }
 }
 
 function mousePressed() {
